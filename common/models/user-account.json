@@ -1,0 +1,63 @@
+{
+  "name": "user_account",
+  "plural": "user_accounts",
+  "base": "User",
+  "idInjection": true,
+  "options": {
+    "validateUpsert": true
+  },
+  "properties": {
+    "first_name": {
+      "type": "string",
+      "required": true
+    },
+    "last_name": {
+      "type": "string",
+      "required": true
+    },
+    "email": {
+      "type": "string",
+      "required": true
+    },
+    "facebook_id": {
+      "type": "string",
+      "required": true
+    },
+    "gmail_id": {
+      "type": "string",
+      "required": true
+    },
+    "password": {
+      "type": "string",
+      "required": true
+    },
+    "gender": {
+      "type": "string",
+      "required": true,
+      "default": "none"
+    },
+    "phone_no": {
+      "type": "number",
+      "required": true
+    },
+    "birth_date": {
+      "type": "date",
+      "required": true
+    },
+    "is_active": {
+      "type": "boolean",
+      "required": true
+    },
+    "created_date": {
+      "type": "date",
+      "required": true
+    },
+    "modified_date": {
+      "type": "date"
+    }
+  },
+  "validations": [],
+  "relations": {},
+  "acls": [],
+  "methods": {}
+}
