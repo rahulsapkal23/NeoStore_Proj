@@ -17,22 +17,22 @@
     "dataSource": "db"
   },
   "AccessToken": {
-    "dataSource": "db",
+    "dataSource": "connect_strong_Database",
     "public": false
   },
   "ACL": {
-    "dataSource": "db",
+    "dataSource": "connect_strong_Database",
     "public": false
   },
   "RoleMapping": {
-    "dataSource": "db",
+    "dataSource": "connect_strong_Database",
     "public": false,
     "options": {
       "strictObjectIDCoercion": true
     }
   },
   "Role": {
-    "dataSource": "db",
+    "dataSource": "connect_strong_Database",
     "public": false
   },
   "user_account": {
