@@ -38,5 +38,13 @@
   "user_account": {
     "dataSource": "connect_strong_Database",
     "public": true
+  },
+  "category": {
+    "dataSource": "connect_strong_Database",
+    "public": true
+  },
+  "product": {
+    "dataSource": "connect_strong_Database",
+    "public": true
   }
 }
