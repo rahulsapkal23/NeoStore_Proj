@@ -1,0 +1,86 @@
+{
+  "name": "product",
+  "plural": "products",
+  "base": "PersistedModel",
+  "idInjection": true,
+  "options": {
+    "validateUpsert": true
+  },
+  "properties": {
+    "product_name": {
+      "type": "string",
+      "required": true
+    },
+    "categoryId": {
+      "type": "string",
+      "required": true
+    },
+    "product_producer": {
+      "type": "string",
+      "required": true
+    },
+    "product_description": {
+      "type": "string",
+      "required": true
+    },
+    "product_cost": {
+      "type": "number",
+      "required": true
+    },
+    "product_avg_rating": {
+      "type": "number",
+      "required": false
+    },
+    "product_view_count": {
+      "type": "number",
+      "required": false
+    },
+    "product_stock": {
+      "type": "number",
+      "required": false
+    },
+    "product_created_date": {
+      "type": "date",
+      "required": false
+    },
+    "product_modified_date": {
+      "type": "date",
+      "required": false
+    },
+    "product_createdby": {
+      "type": "string",
+      "required": false
+    },
+    "product_modifiedby": {
+      "type": "string",
+      "required": false
+    },
+    "product_color": {
+      "type": "string",
+      "required": false
+    },
+    "product_dimension": {
+      "type": "string",
+      "required": false
+    },
+    "product_material": {
+      "type": "string",
+      "required": false
+    }
+  },
+  "validations": [],
+  "relations": {
+
+    "images": {
+      "type": "embedsMany",
+      "model": "image",
+      "property": "productimage",
+      "options": {
+        "validate": false,
+        "forceId": false
+      }
+    }
+  },
+  "acls": [],
+  "methods": {}
+}
