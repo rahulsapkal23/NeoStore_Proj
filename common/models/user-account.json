@@ -65,6 +65,12 @@
       "principalId": "$owner",
       "permission": "ALLOW",
       "property": "accessTokens"
+    },
+    {
+      "accessType": "*",
+      "principalType": "ROLE",
+      "principalId": "$authenticated",
+      "permission": "ALLOW"
     }
   ],
   "methods": {}
