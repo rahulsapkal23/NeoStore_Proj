@@ -69,7 +69,18 @@
     }
   },
   "validations": [],
-  "relations": {},
+  "relations": {
+
+    "images": {
+      "type": "embedsMany",
+      "model": "image",
+      "property": "productimage",
+      "options": {
+        "validate": false,
+        "forceId": false
+      }
+    }
+  },
   "acls": [],
   "methods": {}
 }

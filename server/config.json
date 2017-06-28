@@ -20,5 +20,4 @@
     "cors": false
   },
   "logoutSessionsOnSensitiveChanges": true
-
 }
