@@ -74,11 +74,14 @@
   },
   "validations": [],
   "relations": {
+
     "carts": {
     "type": "hasOne",
     "model": "cart",
     "foreignKey": ""
-  }},
+  }
+  },
+
   "acls": [],
   "methods": {}
 }

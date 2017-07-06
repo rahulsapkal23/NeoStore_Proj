@@ -15,7 +15,7 @@
   },
   "User": {
     "dataSource": "db",
-    "public": false
+    "public": true
   },
   "AccessToken": {
     "dataSource": "connect_strong_Database",
@@ -40,12 +40,7 @@
     "dataSource": "connect_strong_Database",
     "public": true
   },
-
   "rating": {
-    "dataSource": "connect_strong_Database",
-    "public": true
-  },
-  "cart": {
     "dataSource": "connect_strong_Database",
     "public": true
   },
@@ -57,9 +52,15 @@
     "dataSource": "connect_strong_Database",
     "public": true
   },
-  "image": {
+  "cart": {
     "dataSource": "connect_strong_Database",
     "public": true
+  },
+  "image": {
+    "dataSource": "connect_strong_Database",
+
+    "public": true
+
 
   }
 }

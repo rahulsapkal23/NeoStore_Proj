@@ -21,13 +21,17 @@
     },
     "facebook_id": {
       "type": "string",
-      "required": true
+      "required": false
     },
     "gmail_id": {
       "type": "string",
-      "required": true
+      "required": false
     },
     "password": {
+      "type": "string",
+      "required": true
+    },
+    "role": {
       "type": "string",
       "required": true
     },
@@ -51,13 +55,20 @@
     "created_date": {
       "type": "date",
       "required": true
+
     },
     "modified_date": {
       "type": "date"
     }
   },
   "validations": [],
-  "relations": {},
+  "relations": {
+    "carts": {
+      "type": "hasOne",
+      "model": "cart",
+      "foreignKey": ""
+    }
+  },
   "acls": [
     {
       "accessType": "EXECUTE",
@@ -71,6 +82,20 @@
       "principalType": "ROLE",
       "principalId": "$authenticated",
       "permission": "ALLOW"
+    },
+    {
+      "accessType": "EXECUTE",
+      "principalType": "ROLE",
+      "principalId": "$unauthenticated",
+      "permission": "ALLOW",
+      "property": "createAccessToken"
+    },
+    {
+      "accessType": "EXECUTE",
+      "principalType": "ROLE",
+      "principalId": "$everyone",
+      "permission": "ALLOW",
+      "property": "AdminLogin"
     }
   ],
   "methods": {}
