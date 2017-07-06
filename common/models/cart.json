@@ -11,17 +11,16 @@
       "type": "string",
       "required": true
     },
-    "products": {
-      "type": [],
-      "required": true
-    },
+
     "created_date": {
       "type": "date",
       "required": true
     }
   },
   "validations": [],
-  "relations": {},
+  "relations": {
+
+  },
   "acls": [],
   "methods": {}
 }

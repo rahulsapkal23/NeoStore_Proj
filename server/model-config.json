@@ -59,7 +59,7 @@
   },
   "image": {
     "dataSource": "connect_strong_Database",
-    "public": false
+    "public": true
 
   }
 }
