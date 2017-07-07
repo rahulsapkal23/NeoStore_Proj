@@ -12,6 +12,7 @@
     "name": "connect_strong_Database",
     "user": "",
     "connector": "mongodb"
+
   },
   "neoemail": {
     "name": "neoemail",
@@ -31,5 +32,8 @@
         }
       }]
 
-      }
+  }
+
+
+
 }

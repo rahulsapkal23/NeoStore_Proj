@@ -23,6 +23,10 @@
       "type": "string",
       "required": true
     },
+    "product_quntity": {
+      "type": "number",
+      "required": true
+    },
     "product_cost": {
       "type": "number",
       "required": true
@@ -70,6 +74,7 @@
   },
   "validations": [],
   "relations": {
+
     "images": {
       "type": "embedsMany",
       "model": "image",
@@ -78,8 +83,16 @@
         "validate": false,
         "forceId": false
       }
-    }
+    },
+    "carts": {
+    "type": "hasOne",
+    "model": "cart",
+    "foreignKey": ""
+  }
+
+
   },
+
   "acls": [],
   "methods": {}
 }
