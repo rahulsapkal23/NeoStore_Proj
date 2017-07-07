@@ -70,7 +70,6 @@
   },
   "validations": [],
   "relations": {
-
     "images": {
       "type": "embedsMany",
       "model": "image",

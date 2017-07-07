@@ -40,7 +40,6 @@
     "dataSource": "connect_strong_Database",
     "public": true
   },
-
   "rating": {
     "dataSource": "connect_strong_Database",
     "public": true
@@ -60,6 +59,8 @@
   "image": {
     "dataSource": "connect_strong_Database",
     "public": false
-
+  },
+  "Email": {
+    "dataSource": "neoemail"
   }
 }
