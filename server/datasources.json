@@ -4,13 +4,36 @@
     "connector": "memory"
   },
   "connect_strong_Database": {
-    "host": "10.0.100.213",
+    "host": "127.0.0.1",
     "port": "27017",
-    "url": "mongodb://10.0.100.213:27017/NeoStore_Proj_DB",
+    "url": "mongodb://127.0.0.1:27017/NeoStore_Proj_DB",
     "database": "NeoStore_Proj_DB",
     "password": "",
     "name": "connect_strong_Database",
     "user": "",
     "connector": "mongodb"
+
+  },
+  "neoemail": {
+    "name": "neoemail",
+    "connector": "mail",
+    "transports": [
+      {
+        "type": "smtp",
+        "host": "smtp.wwindia.com",
+        "secure": false,
+        "port": 25,
+        "tls": {
+          "rejectUnauthorized": false
+        },
+        "auth": {
+          "user": "Test1@wwindia.com",
+          "pass": "abc123!@#"
+        }
+      }]
+
   }
+
+
+
 }

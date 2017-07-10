@@ -29,11 +29,11 @@
     },
     "password": {
       "type": "string",
-      "required": true
+      "required": false
     },
     "role": {
       "type": "string",
-      "required": true
+      "required": false
     },
     "gender": {
       "type": "string",
@@ -46,15 +46,15 @@
     },
     "birth_date": {
       "type": "date",
-      "required": true
+      "required": false
     },
     "is_active": {
       "type": "boolean",
-      "required": true
+      "required": false
     },
     "created_date": {
       "type": "date",
-      "required": true
+      "required": false
 
     },
     "modified_date": {
@@ -99,4 +99,5 @@
     }
   ],
   "methods": {}
+
 }
