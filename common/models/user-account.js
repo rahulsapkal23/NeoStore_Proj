@@ -23,7 +23,7 @@ module.exports = function(Useraccount) {
   Useraccount.disableRemoteMethodByName('prototype.__get__accessTokens');
   Useraccount.disableRemoteMethodByName('prototype.__updateById__accessTokens');
 
-<<<<<<< HEAD
+
   Useraccount.beforeRemote('create', function(context, user, next) {
 
     context.args.data.created_date=new Date();
@@ -35,11 +35,11 @@ module.exports = function(Useraccount) {
   console.log("-->"+JSON.stringify((context.args.data)));
   next();
 });
-=======
-  Useraccount.disableRemoteMethodByName('PATCH');
+
+  //Useraccount.disableRemoteMethodByName('PATCH');
   //Useraccount.disableRemoteMethodByName('prototype.__create__accessTokens');
   //Useraccount.disableRemoteMethodByName('prototype.__delete__accessTokens');
->>>>>>> bce1d92e80a1795f9cc10d3b5c7db10954942fa3
+
 
 
   /*
@@ -120,7 +120,7 @@ module.exports = function(Useraccount) {
     http: {path: '/loginAdmin', verb: 'post'}
   });
 
-<<<<<<< HEAD
+
   Useraccount.remoteMethod('updateFromAdmin', {
     accepts: [
       {arg: 'user_id', type: 'string', require: true},
@@ -137,9 +137,6 @@ module.exports = function(Useraccount) {
   });
 
 
-
-=======
->>>>>>> bce1d92e80a1795f9cc10d3b5c7db10954942fa3
   Useraccount.AdminLogin = function (email, password, cb) {
     var UserModel = Useraccount;
     console.log("-->" + email);
@@ -225,7 +222,6 @@ module.exports = function(Useraccount) {
     });
   }
 
-<<<<<<< HEAD
   Useraccount.updateFromAdmin=function (user_id,first_name,last_name,role,phone_no,birth_date,cb) {
     console.log("-->" + user_id+""+last_name+""+role+""+phone_no+""+birth_date);
 
@@ -244,9 +240,7 @@ module.exports = function(Useraccount) {
     });
   }
 
-}
-=======
->>>>>>> bce1d92e80a1795f9cc10d3b5c7db10954942fa3
+
 
   Useraccount.beforeRemote('create', function(context, user, next) {
 
