@@ -14,7 +14,16 @@
     "image_isactive": {
       "type": "boolean",
       "required": true
+    },
+    "image_belongsTo": {
+      "type": "string",
+      "required": true
+    },
+    "image_type": {
+      "type": "string",
+      "required": true
     }
+
   },
   "validations": [],
   "relations": {},

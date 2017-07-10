@@ -7,8 +7,12 @@
     "validateUpsert": true
   },
   "properties": {
-    "created_date": {
+    "cart_createdDate": {
       "type": "date",
+      "required": true
+    },
+    "cart_productQuantity": {
+      "type": "number",
       "required": true
     }
   },
