@@ -75,11 +75,22 @@
   "validations": [],
   "relations": {
 
+    "images": {
+      "type": "embedsMany",
+      "model": "image",
+      "property": "productimage",
+      "options": {
+        "validate": false,
+        "forceId": false
+      }
+    },
     "carts": {
     "type": "hasOne",
     "model": "cart",
     "foreignKey": ""
   }
+
+
   },
 
   "acls": [],
