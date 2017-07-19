@@ -29,7 +29,7 @@
           "user": "richa@wwindia.com",
           "pass": "richac123!@#"
         }
-<<<<<<< Updated upstream
+
       }]
 
   },
@@ -37,10 +37,10 @@
     "name": "myfile",
     "connector": "loopback-component-storage",
     "provider": "filesystem",
-    "root": "/Users/webwerks1/Documents/NeoStore_Proj/storage"
-=======
+    "root": "/Users/webwerks/Documents/Strong_neoStore/NeoStore_Proj/storage"
+
       }
-    ]
->>>>>>> Stashed changes
+
+
   }
-}
+
