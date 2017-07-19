@@ -60,6 +60,10 @@
     "dataSource": "connect_strong_Database",
     "public": true
   },
+  "container": {
+    "dataSource": "myfile",
+    "public": false
+  },
   "Email": {
     "dataSource": "neoemail",
     "public": true

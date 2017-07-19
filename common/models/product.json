@@ -9,27 +9,23 @@
   "properties": {
     "product_name": {
       "type": "string",
-      "required": true
+      "required": false
     },
     "categoryId": {
       "type": "string",
-      "required": true
+      "required": false
     },
     "product_producer": {
       "type": "string",
-      "required": true
+      "required": false
     },
     "product_description": {
       "type": "string",
-      "required": true
-    },
-    "product_quntity": {
-      "type": "number",
-      "required": true
+      "required": false
     },
     "product_cost": {
       "type": "number",
-      "required": true
+      "required": false
     },
     "product_avg_rating": {
       "type": "number",
@@ -49,6 +45,10 @@
     },
     "product_modified_date": {
       "type": "date",
+      "required": false
+    },
+    "Product_IMG": {
+      "type": "array",
       "required": false
     },
     "product_createdby": {
@@ -75,17 +75,16 @@
   "validations": [],
   "relations": {
     "carts": {
-    "type": "hasOne",
-    "model": "cart",
-    "foreignKey": ""
-  },
+      "type": "hasOne",
+      "model": "cart",
+      "foreignKey": ""
+    },
     "images": {
       "type": "hasMany",
       "model": "image",
       "foreignKey": ""
     }
   },
-
   "acls": [],
   "methods": {}
 }
