@@ -78,11 +78,14 @@
       "type": "hasOne",
       "model": "cart",
       "foreignKey": ""
+<<<<<<< Updated upstream
     },
     "images": {
       "type": "hasMany",
       "model": "image",
       "foreignKey": ""
+=======
+>>>>>>> Stashed changes
     }
   },
   "acls": [],
