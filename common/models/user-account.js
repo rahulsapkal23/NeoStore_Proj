@@ -39,6 +39,13 @@ module.exports = function(Useraccount) {
   next();
 });
 
+  Useraccount.observe('before save', function updateTimestamp(ctx, next) {
+    console.log("before save-->"+JSON.stringify((ctx.currentInstance.modified_date)));
+    //console.log("-->"+JSON.stringify((context.args.data)));
+    ctx.data.modified_date=new Date();
+    next();
+  });
+
   //Useraccount.disableRemoteMethodByName('PATCH');
   //Useraccount.disableRemoteMethodByName('prototype.__create__accessTokens');
   //Useraccount.disableRemoteMethodByName('prototype.__delete__accessTokens');
