@@ -69,7 +69,7 @@ module.exports = function(Image) {
                       function(err, product){
                         if(!err){
                           console.log("sucess product"+JSON.stringify(product));
-                          var imgData2 = product[0].Product_IMG;
+                          var imgData2 = product[0].product_img;
                           console.log("sucess imgData2 product"+JSON.stringify(imgData2));
                           imgData2.push({
                             ImgURL:  imgURL+"/storage/"+fileInfo.container +"/" + fileInfo.name,
@@ -80,7 +80,7 @@ module.exports = function(Image) {
                           Product.upsertWithWhere(
                             {id : fileObj.fields.productId[0]} ,
                             {
-                              Product_IMG : imgData2
+                              product_img : imgData2
                             },
                             function(err, result) {
                               if(!err){

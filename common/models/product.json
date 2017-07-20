@@ -47,7 +47,7 @@
       "type": "date",
       "required": false
     },
-    "Product_IMG": {
+    "product_img": {
       "type": "array",
       "required": true
     },
