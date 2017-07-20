@@ -22,11 +22,11 @@ module.exports = function(Image) {
     Image.app.models.container.upload(ctx.req, ctx.result, function (err, fileObj) {
       if (err) {
         console.log('err', err);
-        cb({"message": "file is not uploaded please attach file"});
+        cb({"statusCode" : 402,"message": "file is not uploaded please attach file"});
         return;
       }else if (fileObj.fields.userId == undefined && fileObj.fields.productId == undefined)
       {
-        cb({"message": "Either product id or User id is required"});
+        cb({"statusCode" : 400,"message": "Either product id or User id is required"});
         return;
       }
       else if (fileObj.fields.userId == undefined) {
@@ -47,7 +47,7 @@ module.exports = function(Image) {
                 console.log("sucess product.length"+JSON.stringify(product.length));
                 if(product.length == 0){
                   console.log("no such user exist");
-                  cb({"message": "product id is Invalid"});
+                  cb({"statusCode" : 401,"message": "product id is Invalid"});
                   return;
                 }
                 else {
@@ -137,7 +137,7 @@ module.exports = function(Image) {
         }
         else
         {
-          cb({"message": "product id should not null"});
+          cb({"statusCode" : 401,"message": "product id should not null"});
           return;
         }
 
@@ -153,7 +153,7 @@ module.exports = function(Image) {
                 console.log("sucess useracc.length"+JSON.stringify(useracc.length));
                 if(useracc.length == 0){
                   console.log("no such user exist");
-                  cb({"message": "no such user exist"});
+                  cb({"statusCode" : 401,"message": "no such user exist"});
                   return;
                 }
                 else {
@@ -245,7 +245,7 @@ module.exports = function(Image) {
           )
 
         }else {
-          cb({"message": "user id should not null"});
+          cb({"statusCode" : 401,"message": "user id should not null"});
           return;
         }
       }

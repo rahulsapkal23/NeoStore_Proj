@@ -49,7 +49,7 @@
     },
     "product_img": {
       "type": "array",
-      "required": true
+      "required": false
     },
     "product_createdby": {
       "type": "string",
