@@ -17,15 +17,11 @@
     },
     "product_producer": {
       "type": "string",
-      "required": true
+      "required": false
     },
     "product_description": {
       "type": "string",
-      "required": true
-    },
-    "product_quntity": {
-      "type": "number",
-      "required": true
+      "required": false
     },
     "product_cost": {
       "type": "number",
@@ -51,6 +47,10 @@
       "type": "date",
       "required": false
     },
+    "product_img": {
+      "type": "array",
+      "required": false
+    },
     "product_createdby": {
       "type": "string",
       "required": false
@@ -67,10 +67,20 @@
       "type": "string",
       "required": false
     },
+    "product_purchaseCount": {
+      "type": "number",
+      "required": false
+    },
+    "product_isactive": {
+      "type": "boolean",
+      "required": true
+    },
     "product_material": {
       "type": "string",
       "required": false
     }
+
+
   },
   "validations": [],
   "relations": {
@@ -83,6 +93,7 @@
       "type": "hasMany",
       "model": "image",
       "foreignKey": ""
+
     }
   },
   "acls": [],

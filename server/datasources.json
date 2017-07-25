@@ -29,7 +29,17 @@
           "user": "richa@wwindia.com",
           "pass": "richac123!@#"
         }
-      }
-    ]
+
+      }]
+
+  },
+  "myfile": {
+    "name": "myfile",
+    "connector": "loopback-component-storage",
+    "provider": "filesystem",
+    "root": "/Users/webwerks/Documents/Darshana/NeoStore/Project/NeoStore_Proj/storage"
+
   }
+
+
 }

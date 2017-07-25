@@ -4,6 +4,7 @@ var path = require('path');
 var apiRootUrl = "http://0.0.0.0:3000/api/";
 module.exports = function(Useraccount) {
 
+  Useraccount.validatesUniquenessOf('email', {message: 'Email already exists'});
   Useraccount.validatesInclusionOf('gender', {in: ['male', 'female'],message:{in:'In valid gender'}});
   Useraccount.validatesInclusionOf('is_active', {in: [true, false],message:{in:'Only True and false are allowed'}});
 
@@ -29,12 +30,21 @@ module.exports = function(Useraccount) {
     context.args.data.created_date=new Date();
 
   //context.args.data.publisherId = context.req.accessToken.userId;
-  Useraccount.validatesPresenceOf('password', {message: 'Cannot be blank'});
+  //Useraccount.validatesPresenceOf('password', {message: 'Cannot be blank'});
 
   console.log(JSON.stringify(user));
   console.log("-->"+JSON.stringify((context.args.data)));
+    console.log("-->"+JSON.stringify((context.args.data.email)));
+    //checkemail(context.args.data.email);
   next();
 });
+
+  Useraccount.observe('before save', function updateTimestamp(ctx, next) {
+    console.log("before save-->"+JSON.stringify((ctx.currentInstance.modified_date)));
+    //console.log("-->"+JSON.stringify((context.args.data)));
+    ctx.data.modified_date=new Date();
+    next();
+  });
 
   //Useraccount.disableRemoteMethodByName('PATCH');
   //Useraccount.disableRemoteMethodByName('prototype.__create__accessTokens');
@@ -66,7 +76,8 @@ module.exports = function(Useraccount) {
     var modelName = Useraccount.definition.name;
     var methodName  = "reset-password"
     //var setURL = apiRootUrl+modelName +"/"+methodName +"access_token ="+tempAccessToken;
-    var setURL = "file:///Users/webwerks/Documents/Darshana/NeoStore/changePassword.html" +"?access_token="+tempAccessToken;
+    var forgotPasswordPage= "http://10.0.100.211:4200/set-password";//"file:///Users/webwerks/Documents/Darshana/NeoStore/changePassword.html";
+    var setURL = forgotPasswordPage +"?access_token="+tempAccessToken;
     console.log("setURL : " +setURL);
 
     var options = {
@@ -80,9 +91,8 @@ module.exports = function(Useraccount) {
     };
 
 
-
     Useraccount.app.models.Email.send({
-      to: "darshana.patil@wwindia.com",//"sandip.ghadge@wwindia.com",//info.email,
+      to: "suhel.khan@neosofttech.com",//"sandip.ghadge@wwindia.com",//info.email,
       from: 'darshana.patil@wwindia.com',
       subject: 'Forgot Email Id',
       html :"<a href='"+setURL+"'>Click Me to Change Password</a>"
@@ -102,9 +112,6 @@ module.exports = function(Useraccount) {
     info.accessToken.user(function (err, user) {
       console.log(user); // the actual user
     });
-
-
-
   });
 
 
@@ -120,28 +127,11 @@ module.exports = function(Useraccount) {
     http: {path: '/loginAdmin', verb: 'post'}
   });
 
-
-  Useraccount.remoteMethod('updateFromAdmin', {
-    accepts: [
-      {arg: 'user_id', type: 'string', require: true},
-      {arg: 'first_name', type: 'string', require: true},
-      {arg: 'last_name', type: 'string', require: true},
-      {arg: 'role', type: 'string', require: true},
-      {arg: 'phone_no', type: 'string', require: true},
-      {arg: 'birth_date', type: 'string', require: true}
-    ],
-    returns: [
-      {arg: 'response', type: 'object'}
-    ],
-    http: {path: '/Update_user', verb: 'PUT'}
-  });
-
-
-  Useraccount.AdminLogin = function (email, password, cb) {
+   Useraccount.AdminLogin = function (email, password, cb) {
     var UserModel = Useraccount;
     console.log("-->" + email);
 
-    UserModel.find({where: {and: [{email: email}, {role: 'admin'}]}} , function (err, user) {
+    UserModel.find({where: {and: [{email: email}, {role: 'admin'},{is_active:true}]}} , function (err, user) {
 
       if (err) {
         //custom logger 
@@ -178,7 +168,7 @@ module.exports = function(Useraccount) {
 
         else{
           console.error(err);
-          cb({"message": "you ar not an admin"});
+          cb({"message": "You ar not an Admin"});
 
         }
 
@@ -188,71 +178,95 @@ module.exports = function(Useraccount) {
 
 
 
-  Useraccount.remoteMethod('updateFromAdmin', {
-    accepts: [
-      {arg: 'user_id', type: 'string', require: true},
-      {arg: 'first_name', type: 'string', require: true},
-      {arg: 'last_name', type: 'string', require: true},
-      {arg: 'role', type: 'string', require: true},
-      {arg: 'phone_no', type: 'string', require: true},
-      {arg: 'birth_date', type: 'string', require: true}
-    ],
+
+
+  Useraccount.updateFromAdmin=function (user_id,first_name,last_name,role,phone_no,birth_date,cb) {
+    console.log("-->" + user_id+""+last_name+""+role+""+phone_no+""+birth_date);
+
+    //let data={};
+    //Useraccount.updateAttributes(data, callback)
+
+    Useraccount.find({where: {"id": user_id}} , function (err, user) {
+      console.log("data-->"+JSON.stringify(user)+"-------"+user.length);
+      if(user.length){
+
+      }
+      else {
+        console.log("no such user exist");
+      }
+
+    });
+  }
+
+  //Useraccount.observe("",)
+
+  //admin after login Dashbaord API
+
+  Useraccount.remoteMethod('AdminDashboard', {
+    // accepts: [
+    //   {arg: 'email', type: 'string', require: true},
+    //   {arg: 'password', type: 'string', require: true}
+    // ],
     returns: [
       {arg: 'response', type: 'object'}
     ],
-    http: {path: '/Update_user', verb: 'PUT'}
+    http: {path: '/adminDashboard', verb: 'get'}
   });
 
+   Useraccount.AdminDashboard=function (cb) {
+     console.log("in Dashboard API");
+     var output = {};
 
-  Useraccount.updateFromAdmin=function (user_id,first_name,last_name,role,phone_no,birth_date,cb) {
-    console.log("-->" + user_id+""+last_name+""+role+""+phone_no+""+birth_date);
+     Useraccount.find({where: {and: [{role: 'admin'}, {is_active: true}]}}, function (err, result) {
+       console.log("result-->" + result.length)
+       if (!err) {
+         output.Admin_User = result.length;
+       }
+       else {
+         var err = new Error();
+         err.statusCode = 404;
+         err.message = 'something Went Wrong';
+         cb(err);
+         return;
+       }
 
-    //let data={};
-    //Useraccount.updateAttributes(data, callback)
+     });
 
-    Useraccount.find({where: {"id": user_id}} , function (err, user) {
-      console.log("data-->"+JSON.stringify(user)+"-------"+user.length);
-      if(user.length){
+     Useraccount.find(function (err, result) {
+       console.log("Total Users-->" + result.length)
+       if (!err) {
+         output.Total_User = result.length;
+         //cb(null,output);
+       }
+       else {
+         var err = new Error();
+         err.statusCode = 404;
+         err.message = 'something Went Wrong';
+         cb(err);
+         return;
+       }
 
-      }
-      else {
-        console.log("no such user exist");
-      }
+     });
 
-    });
-  }
-
-  Useraccount.updateFromAdmin=function (user_id,first_name,last_name,role,phone_no,birth_date,cb) {
-    console.log("-->" + user_id+""+last_name+""+role+""+phone_no+""+birth_date);
-
-    //let data={};
-    //Useraccount.updateAttributes(data, callback)
-
-    Useraccount.find({where: {"id": user_id}} , function (err, user) {
-      console.log("data-->"+JSON.stringify(user)+"-------"+user.length);
-      if(user.length){
-
-      }
-      else {
-        console.log("no such user exist");
-      }
-
-    });
-  }
-
+     Useraccount.app.models.Product.find(function (err, result) {
+       console.log("Total product-->" + result.length)
+       if (!err) {
+         output.Total_Product = result.length;
+         cb(null, output);
+       }
+       else {
+         var err = new Error();
+         err.statusCode = 404;
+         err.message = 'something Went Wrong';
+         cb(err);
+         return;
+       }
 
 
-  Useraccount.beforeRemote('create', function(context, user, next) {
+     });
 
-    context.args.data.created_date=new Date();
+   }
 
-    //context.args.data.publisherId = context.req.accessToken.userId;
-    Useraccount.validatesPresenceOf('password', {message: 'Cannot be blank'});
-
-    console.log(JSON.stringify(user));
-    console.log("-->"+JSON.stringify((context.args.data)));
-    next();
-  });
 
 
 

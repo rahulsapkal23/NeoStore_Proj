@@ -26,6 +26,12 @@
       "type": "hasMany",
       "model": "product",
       "foreignKey": "categoryId"
+    },
+    "images": {
+      "type": "hasOne",
+      "model": "image",
+      "foreignKey": ""
+
     }
   },
   "acls": [],

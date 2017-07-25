@@ -15,7 +15,7 @@
   },
   "User": {
     "dataSource": "db",
-    "public": true
+    "public": false
   },
   "AccessToken": {
     "dataSource": "connect_strong_Database",
@@ -58,6 +58,10 @@
   },
   "image": {
     "dataSource": "connect_strong_Database",
+    "public": true
+  },
+  "container": {
+    "dataSource": "myfile",
     "public": false
   },
   "Email": {
@@ -76,4 +80,5 @@
     "dataSource": "connect_strong_Database",
     "public": true
   }
+
 }

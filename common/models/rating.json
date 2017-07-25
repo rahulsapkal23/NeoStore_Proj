@@ -21,7 +21,20 @@
     }
   },
   "validations": [],
-  "relations": {},
+  "relations": {
+    "userId": {
+      "type": "hasMany",
+      "model": "user_account",
+      "foreignKey": "",
+      "through": "user_account"
+    },
+    "productId": {
+      "type": "hasMany",
+      "model": "product",
+      "foreignKey": "id",
+      "through": "product"
+    }
+  },
   "acls": [],
   "methods": {}
 }

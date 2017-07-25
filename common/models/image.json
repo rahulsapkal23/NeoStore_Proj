@@ -1,31 +1,25 @@
 {
   "name": "image",
   "plural": "images",
-  "base": "PersistedModel",
+  "base": "Model",
   "idInjection": true,
   "options": {
     "validateUpsert": true
   },
   "properties": {
-    "image_url": {
-      "type": "string",
-      "required": true
-    },
     "image_isactive": {
       "type": "boolean",
-      "required": true
+      "required": false
     },
     "image_belongsTo": {
       "type": "string",
-      "required": true
-    },
-    "image_type": {
-      "type": "string",
-      "required": true
+      "required": false
     }
   },
   "validations": [],
-  "relations": {},
+  "relations": {
+
+  },
   "acls": [],
   "methods": {}
 }
