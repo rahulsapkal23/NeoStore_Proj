@@ -1,31 +1,37 @@
 {
-  "name": "image",
-  "plural": "images",
+  "name": "order",
+  "plural": "orders",
   "base": "PersistedModel",
   "idInjection": true,
   "options": {
     "validateUpsert": true
   },
   "properties": {
-    "image_url": {
+    "createon": {
+      "type": "date",
+      "required": true
+    },
+    "userid": {
       "type": "string",
       "required": true
     },
-    "image_isactive": {
-      "type": "boolean",
-      "required": true
-    },
-    "image_belongsTo": {
+    "orderstatus": {
       "type": "string",
       "required": true
     },
-    "image_type": {
+    "ordertotal": {
       "type": "string",
-      "required": true
+      "default": "0"
     }
   },
   "validations": [],
-  "relations": {},
+  "relations": {
+    "_id": {
+      "type": "hasMany",
+      "model": "user_account",
+      "foreignKey": ""
+    }
+  },
   "acls": [],
   "methods": {}
 }

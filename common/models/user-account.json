@@ -55,7 +55,6 @@
     "created_date": {
       "type": "date",
       "required": false
-
     },
     "modified_date": {
       "type": "date"
@@ -99,5 +98,4 @@
     }
   ],
   "methods": {}
-
 }

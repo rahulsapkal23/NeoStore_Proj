@@ -12,7 +12,6 @@
     "name": "connect_strong_Database",
     "user": "",
     "connector": "mongodb"
-
   },
   "neoemail": {
     "name": "neoemail",
@@ -27,13 +26,10 @@
           "rejectUnauthorized": false
         },
         "auth": {
-          "user": "Test1@wwindia.com",
-          "pass": "abc123!@#"
+          "user": "richa@wwindia.com",
+          "pass": "richac123!@#"
         }
-      }]
-
+      }
+    ]
   }
-
-
-
 }

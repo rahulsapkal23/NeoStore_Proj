@@ -75,17 +75,16 @@
   "validations": [],
   "relations": {
     "carts": {
-    "type": "hasOne",
-    "model": "cart",
-    "foreignKey": ""
-  },
+      "type": "hasOne",
+      "model": "cart",
+      "foreignKey": ""
+    },
     "images": {
       "type": "hasMany",
       "model": "image",
       "foreignKey": ""
     }
   },
-
   "acls": [],
   "methods": {}
 }

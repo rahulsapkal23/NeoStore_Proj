@@ -63,5 +63,17 @@
   "Email": {
     "dataSource": "neoemail",
     "public": true
+  },
+  "order": {
+    "dataSource": "connect_strong_Database",
+    "public": true
+  },
+  "orderstatus": {
+    "dataSource": "connect_strong_Database",
+    "public": true
+  },
+  "orderitems": {
+    "dataSource": "connect_strong_Database",
+    "public": true
   }
 }
