@@ -1,36 +1,46 @@
 {
-  "name": "orderitems",
-  "plural": "orderitems",
+  "name": "shoppingcart",
+  "plural": "shoppingcart",
   "base": "PersistedModel",
   "idInjection": true,
   "options": {
     "validateUpsert": true
   },
   "properties": {
-    "productid": {
+    "userid": {
       "type": "string",
       "required": true
     },
-    "productprice": {
-      "type": "number",
-      "required": true,
-      "default": 0
+    "productid": {
+      "type": "string",
+      "required": true
     },
     "productqty": {
       "type": "number",
       "required": true
     },
-    "orderid": {
-      "type": "string",
+    "instock": {
+      "type": "boolean",
+      "required": true
+    },
+    "createdate": {
+      "type": "date",
       "required": true
     }
   },
   "validations": [],
   "relations": {
-    "_id": {
+    "users": {
+      "type": "hasOne",
+      "model": "user_account"
+
+
+    },
+
+    "products": {
       "type": "belongsTo",
-      "model": "order",
-      "foreignKey": ""
+      "model": "product"
+
     }
   },
   "acls": [],

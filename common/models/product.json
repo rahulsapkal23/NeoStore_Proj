@@ -79,8 +79,6 @@
       "type": "string",
       "required": false
     }
-
-
   },
   "validations": [],
   "relations": {
@@ -93,7 +91,6 @@
       "type": "hasMany",
       "model": "image",
       "foreignKey": ""
-
     }
   },
   "acls": [],
