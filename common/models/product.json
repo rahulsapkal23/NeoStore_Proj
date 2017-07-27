@@ -47,10 +47,7 @@
       "type": "date",
       "required": false
     },
-    "product_img": {
-      "type": "array",
-      "required": false
-    },
+
     "product_createdby": {
       "type": "string",
       "required": false
@@ -82,11 +79,13 @@
   },
   "validations": [],
   "relations": {
+
     "carts": {
       "type": "hasOne",
       "model": "cart",
       "foreignKey": ""
     },
+
     "images": {
       "type": "hasMany",
       "model": "image",

@@ -1,29 +1,36 @@
 {
-  "name": "orderstatus",
-  "plural": "orderstatus",
+  "name": "address",
+  "plural": "addresses",
   "base": "PersistedModel",
   "idInjection": true,
   "options": {
     "validateUpsert": true
   },
   "properties": {
-    "statusname": {
+    "fulladdress": {
       "type": "string",
       "required": true
     },
-    "alias": {
+    "city": {
+      "type": "string",
+      "required": true
+    },
+    "state": {
+      "type": "string",
+      "required": true
+    },
+    "pincode": {
+      "type": "number",
+      "required": true
+    },
+    "country": {
       "type": "string",
       "required": true
     }
   },
   "validations": [],
   "relations": {
-    "products": {
-      "type": "hasMany",
-      "model": "product",
-      "foreignKey": "productId"
-    }
-  },
+    },
   "acls": [],
   "methods": {}
 }

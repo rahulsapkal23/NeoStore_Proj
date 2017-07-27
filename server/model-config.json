@@ -79,5 +79,9 @@
   "shoppingcart": {
     "dataSource": "connect_strong_Database",
     "public": true
+  },
+  "address": {
+    "dataSource": "connect_strong_Database",
+    "public": true
   }
 }
