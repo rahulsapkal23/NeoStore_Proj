@@ -79,6 +79,13 @@
   },
   "validations": [],
   "relations": {
+
+    "carts": {
+      "type": "hasOne",
+      "model": "cart",
+      "foreignKey": ""
+    },
+
     "images": {
       "type": "hasMany",
       "model": "image",

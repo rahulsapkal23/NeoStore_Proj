@@ -1,0 +1,48 @@
+{
+  "name": "shoppingcart",
+  "plural": "shoppingcart",
+  "base": "PersistedModel",
+  "idInjection": true,
+  "options": {
+    "validateUpsert": true
+  },
+  "properties": {
+    "userid": {
+      "type": "string",
+      "required": true
+    },
+    "productid": {
+      "type": "string",
+      "required": true
+    },
+    "productqty": {
+      "type": "number",
+      "required": true
+    },
+    "instock": {
+      "type": "boolean",
+      "required": true
+    },
+    "createdate": {
+      "type": "date",
+      "required": true
+    }
+  },
+  "validations": [],
+  "relations": {
+    "users": {
+      "type": "hasOne",
+      "model": "user_account"
+
+
+    },
+
+    "products": {
+      "type": "belongsTo",
+      "model": "product"
+
+    }
+  },
+  "acls": [],
+  "methods": {}
+}

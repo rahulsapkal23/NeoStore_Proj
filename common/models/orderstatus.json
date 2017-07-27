@@ -1,18 +1,18 @@
 {
-  "name": "cart",
-  "plural": "carts",
+  "name": "orderstatus",
+  "plural": "orderstatus",
   "base": "PersistedModel",
   "idInjection": true,
   "options": {
     "validateUpsert": true
   },
   "properties": {
-    "cart_createdDate": {
-      "type": "date",
+    "statusname": {
+      "type": "string",
       "required": true
     },
-    "cart_productQuantity": {
-      "type": "number",
+    "alias": {
+      "type": "string",
       "required": true
     }
   },

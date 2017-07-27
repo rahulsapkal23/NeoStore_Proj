@@ -1,0 +1,37 @@
+{
+  "name": "order",
+  "plural": "orders",
+  "base": "PersistedModel",
+  "idInjection": true,
+  "options": {
+    "validateUpsert": true
+  },
+  "properties": {
+    "createon": {
+      "type": "date",
+      "required": true
+    },
+    "userid": {
+      "type": "string",
+      "required": true
+    },
+    "orderstatus": {
+      "type": "string",
+      "required": true
+    },
+    "ordertotal": {
+      "type": "string",
+      "default": "0"
+    }
+  },
+  "validations": [],
+  "relations": {
+    "_id": {
+      "type": "hasMany",
+      "model": "user_account",
+      "foreignKey": ""
+    }
+  },
+  "acls": [],
+  "methods": {}
+}

@@ -1,0 +1,38 @@
+{
+  "name": "orderitems",
+  "plural": "orderitems",
+  "base": "PersistedModel",
+  "idInjection": true,
+  "options": {
+    "validateUpsert": true
+  },
+  "properties": {
+    "productid": {
+      "type": "string",
+      "required": true
+    },
+    "productprice": {
+      "type": "number",
+      "required": true,
+      "default": 0
+    },
+    "productqty": {
+      "type": "number",
+      "required": true
+    },
+    "orderid": {
+      "type": "string",
+      "required": true
+    }
+  },
+  "validations": [],
+  "relations": {
+    "_id": {
+      "type": "belongsTo",
+      "model": "order",
+      "foreignKey": ""
+    }
+  },
+  "acls": [],
+  "methods": {}
+}
