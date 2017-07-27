@@ -57,7 +57,8 @@
       "required": false
     },
     "modified_date": {
-      "type": "date"
+      "type": "date",
+      "required": false
     }
   },
   "validations": [],
