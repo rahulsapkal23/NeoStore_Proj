@@ -1,35 +1,34 @@
 {
-  "name": "category",
-  "plural": "categories",
+  "name": "order",
+  "plural": "orders",
   "base": "PersistedModel",
   "idInjection": true,
   "options": {
     "validateUpsert": true
   },
   "properties": {
-    "category_name": {
+    "createon": {
+      "type": "date",
+      "required": true
+    },
+    "userid": {
       "type": "string",
       "required": true
     },
-    "category_isactive": {
-      "type": "boolean",
-      "required": true
-    },
-    "category_description": {
+    "orderstatus": {
       "type": "string",
       "required": true
+    },
+    "ordertotal": {
+      "type": "string",
+      "default": "0"
     }
   },
   "validations": [],
   "relations": {
-    "products": {
+    "_id": {
       "type": "hasMany",
-      "model": "product",
-      "foreignKey": "categoryId"
-    },
-    "images": {
-      "type": "hasOne",
-      "model": "image",
+      "model": "user_account",
       "foreignKey": ""
     }
   },

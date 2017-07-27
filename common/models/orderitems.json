@@ -1,35 +1,35 @@
 {
-  "name": "category",
-  "plural": "categories",
+  "name": "orderitems",
+  "plural": "orderitems",
   "base": "PersistedModel",
   "idInjection": true,
   "options": {
     "validateUpsert": true
   },
   "properties": {
-    "category_name": {
+    "productid": {
       "type": "string",
       "required": true
     },
-    "category_isactive": {
-      "type": "boolean",
+    "productprice": {
+      "type": "number",
+      "required": true,
+      "default": 0
+    },
+    "productqty": {
+      "type": "number",
       "required": true
     },
-    "category_description": {
+    "orderid": {
       "type": "string",
       "required": true
     }
   },
   "validations": [],
   "relations": {
-    "products": {
-      "type": "hasMany",
-      "model": "product",
-      "foreignKey": "categoryId"
-    },
-    "images": {
-      "type": "hasOne",
-      "model": "image",
+    "_id": {
+      "type": "belongsTo",
+      "model": "order",
       "foreignKey": ""
     }
   },

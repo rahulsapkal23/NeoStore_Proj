@@ -52,10 +52,6 @@
     "dataSource": "connect_strong_Database",
     "public": true
   },
-  "cart": {
-    "dataSource": "connect_strong_Database",
-    "public": true
-  },
   "image": {
     "dataSource": "connect_strong_Database",
     "public": true
@@ -67,6 +63,21 @@
   "Email": {
     "dataSource": "neoemail",
     "public": true
+  },
+  "order": {
+    "dataSource": "connect_strong_Database",
+    "public": true
+  },
+  "orderstatus": {
+    "dataSource": "connect_strong_Database",
+    "public": true
+  },
+  "orderitems": {
+    "dataSource": "connect_strong_Database",
+    "public": true
+  },
+  "shoppingcart": {
+    "dataSource": "connect_strong_Database",
+    "public": true
   }
-
 }
