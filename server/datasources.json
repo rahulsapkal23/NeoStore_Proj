@@ -4,9 +4,9 @@
     "connector": "memory"
   },
   "connect_strong_Database": {
-    "host": "127.0.0.1",
+    "host": "10.0.100.213",
     "port": "27017",
-    "url": "mongodb://127.0.0.1:27017/NeoStore_Proj_DB",
+    "url": "mongodb://10.0.100.213:27017/NeoStore_Proj_DB",
     "database": "NeoStore_Proj_DB",
     "password": "",
     "name": "connect_strong_Database",
@@ -36,6 +36,6 @@
     "name": "myfile",
     "connector": "loopback-component-storage",
     "provider": "filesystem",
-    "root": "/Users/webwerks/Documents/Darshana/NeoStore/Project/NeoStore_Proj/storage"
+    "root": "/Users/webwerks/Documents/Strong_neoStore/NeoStore_Proj/storage"
   }
 }

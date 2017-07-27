@@ -20,6 +20,7 @@ module.exports = function (Product) {
               return;
             }else {
               context.args.data.product_created_date=new Date();
+              context.args.data.product_avg_rating=0;
               console.log(JSON.stringify(product));
               console.log("-->"+JSON.stringify((context.args.data)));
               cb();
