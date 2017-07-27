@@ -31,7 +31,6 @@
       "type": "hasOne",
       "model": "image",
       "foreignKey": ""
-
     }
   },
   "acls": [],

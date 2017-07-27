@@ -1,7 +1,7 @@
 {
   "name": "image",
   "plural": "images",
-  "base": "Model",
+  "base": "PersistedModel",
   "idInjection": true,
   "options": {
     "validateUpsert": true
@@ -17,9 +17,7 @@
     }
   },
   "validations": [],
-  "relations": {
-
-  },
+  "relations": {},
   "acls": [],
   "methods": {}
 }

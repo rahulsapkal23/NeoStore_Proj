@@ -67,6 +67,9 @@
   "Email": {
     "dataSource": "neoemail",
     "public": true
+  },
+  "address": {
+    "dataSource": "connect_strong_Database",
+    "public": true
   }
-
 }

@@ -66,6 +66,16 @@
       "type": "hasOne",
       "model": "cart",
       "foreignKey": ""
+    },
+    "images": {
+      "type": "hasOne",
+      "model": "image",
+      "foreignKey": ""
+    },
+    "addresses": {
+      "type": "hasMany",
+      "model": "address",
+      "foreignKey": ""
     }
   },
   "acls": [

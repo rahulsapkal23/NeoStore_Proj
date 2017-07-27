@@ -3,11 +3,12 @@
 module.exports = function (Product) {
 
   Product.beforeRemote('create', function(context, product, cb) {
-    if (context.args.data.product_img == undefined)
-    {
-      cb({"statusCode" : 400,"message": "product_img is required"});
-      return;
-    }else {
+    // if (context.args.data.product_img == undefined)
+    // {
+    //   cb({"statusCode" : 400,"message": "product_img is required"});
+    //   return;
+    // }else
+      {
       console.log(context.args.data.categoryId);
 
       Product.app.models.Category.find(
