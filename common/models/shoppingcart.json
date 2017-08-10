@@ -1,13 +1,13 @@
 {
   "name": "shoppingcart",
-  "plural": "shoppingcart",
+  "plural": "shoppingcarts",
   "base": "PersistedModel",
   "idInjection": true,
   "options": {
     "validateUpsert": true
   },
   "properties": {
-    "userid": {
+    "userId": {
       "type": "string",
       "required": true
     },
@@ -23,31 +23,28 @@
       "type": "boolean",
       "required": true
     },
+    "product_cost": {
+      "type": "number",
+      "required": false
+    },
+    "product_description": {
+      "type": "string",
+      "required": false
+    },
     "createdate": {
       "type": "date",
-      "required": true
+      "required": false
     }
   },
   "validations": [],
   "relations": {
-    "users": {
-      "type": "hasOne",
-      "model": "user_account"
-
-
-    },
-
     "products": {
-      "type": "belongsTo",
-      "model": "product"
-
+      "type": "hasMany",
+      "model": "product",
+      "foreignKey": "productid"
     }
+
   },
-  "acls": [{
-    "accessType": "*",
-    "principalType": "ROLE",
-    "principalId": "$authenticated",
-    "permission": "ALLOW"
-  }],
+  "acls": [],
   "methods": {}
 }

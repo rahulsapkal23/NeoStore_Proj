@@ -4,9 +4,9 @@
     "connector": "memory"
   },
   "connect_strong_Database": {
-    "host": "127.0.0.1",
+    "host": "10.0.29.21",
     "port": "27017",
-    "url": "mongodb://127.0.0.1:27017/NeoStore_Proj_DB",
+    "url": "mongodb://10.0.29.21:27017/NeoStore_Proj_DB",
     "database": "NeoStore_Proj_DB",
     "password": "",
     "name": "connect_strong_Database",

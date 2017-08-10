@@ -9,11 +9,11 @@
   "properties": {
     "first_name": {
       "type": "string",
-      "required": true
+      "required": false
     },
     "last_name": {
       "type": "string",
-      "required": true
+      "required": false
     },
     "email": {
       "type": "string",
@@ -57,7 +57,8 @@
       "required": false
     },
     "modified_date": {
-      "type": "date"
+      "type": "date",
+      "required": false
     }
   },
   "validations": [],
@@ -66,6 +67,21 @@
       "type": "hasOne",
       "model": "cart",
       "foreignKey": ""
+    },
+    "images": {
+      "type": "hasOne",
+      "model": "image",
+      "foreignKey": ""
+    },
+    "addresses": {
+      "type": "hasMany",
+      "model": "address",
+      "foreignKey": ""
+    },
+    "shoppingcarts": {
+      "type": "hasMany",
+      "model": "shoppingcart",
+      "foreignKey": "userId"
     }
   },
   "acls": [
