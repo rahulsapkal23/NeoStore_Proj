@@ -29,8 +29,14 @@
     }
   },
   "validations": [],
-  "relations": {
-    },
-  "acls": [],
+  "relations": {},
+  "acls": [
+    {
+      "accessType": "*",
+      "principalType": "ROLE",
+      "principalId": "$owner",
+      "permission": "DENY"
+    }
+  ],
   "methods": {}
 }

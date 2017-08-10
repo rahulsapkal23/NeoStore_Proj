@@ -47,7 +47,6 @@
       "type": "date",
       "required": false
     },
-
     "product_createdby": {
       "type": "string",
       "required": false
@@ -57,7 +56,7 @@
       "required": false
     },
     "product_color": {
-      "type": "string",
+      "type": "object",
       "required": false
     },
     "product_dimension": {
@@ -79,12 +78,6 @@
   },
   "validations": [],
   "relations": {
-
-    "carts": {
-      "type": "hasOne",
-      "model": "cart",
-      "foreignKey": ""
-    },
 
     "images": {
       "type": "hasMany",

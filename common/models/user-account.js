@@ -68,6 +68,7 @@ module.exports = function (Useraccount) {
     accepts: [
       {arg: 'email', type: 'string', require: true},
       {arg: 'password', type: 'string', require: true}
+
     ],
     returns: [
       {arg: 'response', type: 'object'}
@@ -192,6 +193,18 @@ module.exports = function (Useraccount) {
 
       }
     });
+    //UserModel.find({where:{id: userid}}, function(err, data){
+    //   if (err) {
+    //     //custom logger 
+    //     console.error(err);
+    //     cb({"message": "some thing went Wrong"});
+    //     return;
+    //   }
+    //   else {
+    //
+    //     console.log( "success=" + JSON.stringify(data));
+    //   }
+    // });
   }
 
 

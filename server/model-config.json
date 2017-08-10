@@ -76,11 +76,15 @@
     "dataSource": "connect_strong_Database",
     "public": true
   },
-  "shoppingcart": {
+  "address": {
     "dataSource": "connect_strong_Database",
     "public": true
   },
-  "address": {
+  "colors": {
+    "dataSource": "connect_strong_Database",
+    "public": true
+  },
+  "shoppingcart": {
     "dataSource": "connect_strong_Database",
     "public": true
   }

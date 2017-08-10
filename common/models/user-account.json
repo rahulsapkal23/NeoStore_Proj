@@ -9,11 +9,11 @@
   "properties": {
     "first_name": {
       "type": "string",
-      "required": true
+      "required": false
     },
     "last_name": {
       "type": "string",
-      "required": true
+      "required": false
     },
     "email": {
       "type": "string",
@@ -77,6 +77,11 @@
       "type": "hasMany",
       "model": "address",
       "foreignKey": ""
+    },
+    "shoppingcarts": {
+      "type": "hasMany",
+      "model": "shoppingcart",
+      "foreignKey": "userId"
     }
   },
   "acls": [
