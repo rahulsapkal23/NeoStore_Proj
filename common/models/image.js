@@ -9,7 +9,7 @@ var UserAcc = loopback.getModel("user_account");
 module.exports = function(Image) {
 
   var thumb = require('node-thumbnail').thumb;
-  var imgURL = "http://10.0.100.213:8080";
+  var imgURL = "http://10.0.100.213:8081";
   var containerName = 'image';
   var thumbpath;
   var imgType;
@@ -248,7 +248,7 @@ module.exports = function(Image) {
                                     cb(null, response);
                                   }
                                 });
-                   
+
                   }).catch(function(e) {
                     console.log('Error', e.toString());
                   });

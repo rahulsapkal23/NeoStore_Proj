@@ -16,29 +16,29 @@ module.exports = function (Shoppingcart) {
     console.log("-->" + JSON.stringify((context.args.data)));
     var getProdId = context.args.data.productid;
 
-    Shoppingcart.app.models.Product.find({where: {id: getProdId}}, function (err, cart) {
-      // console.log("get data ---> "+ JSON.stringify(cart));
-      if (err) {
-        console.log("error");
-        cb({"message": "Something went wrong"});
-        return;
-      }
-      else {
-        if (context.args.data) {
-          console.log("in side update of date-->" + JSON.stringify((context.args.data)));
-          context.args.data.product_description = cart[0].product_description;
-          context.args.data.product_cost = cart[0].product_cost;
-          next();
-          // ctx.data.modified_date = new Date();
-        }
-      }
-    })
+    // Shoppingcart.app.models.Product.find({where: {id: getProdId}}, function (err, cart) {
+    //   // console.log("get data ---> "+ JSON.stringify(cart));
+    //   if (err) {
+    //     console.log("error");
+    //     cb({"message": "Something went wrong"});
+    //     return;
+    //   }
+    //   else {
+    //     if (context.args.data) {
+    //       console.log("in side update of date-->" + JSON.stringify((context.args.data)));
+    //       //context.args.data.product_description = cart[0].product_description;
+    //       //context.args.data.product_cost = cart[0].product_cost;
+    //      //next();
+    //       // ctx.data.modified_date = new Date();
+    //     }
+    //   }
+    // })
 
     //context.args.data.product_description=pro_desc;
 
     //console.log("-insert->" + JSON.stringify((context.args.data.email)));
     //checkemail(context.args.data.email);
-
+    next();
   });
 
 
@@ -74,7 +74,7 @@ module.exports = function (Shoppingcart) {
   Shoppingcart.remoteMethod('addToCart', {
     description: "Adding product to cart",
     accepts: [
-      {arg: 'data', type: 'object', http: {source: 'body'}, required: true},
+      {arg: 'data', type: 'object', http: {source: 'body'}, required: true}
     ],
     returns: [
 
@@ -86,25 +86,26 @@ module.exports = function (Shoppingcart) {
 
   Shoppingcart.addToCart = function (data, cb) {
 
-    //console.log("into add to cart", data);
+    console.log("into add to cart", JSON.stringify(data));
 
-    //var objectData = data; // Aniket uncomment and check it and comment the below hardCoded data
+    var objectData = data; // Aniket uncomment and check it and comment the below hardCoded data
 
-
+    var success = false;
     // need to insert data into db
-
-    var objectData = {
-      "userId": "5950c54a6e8be65c5925bffa",
-      "products": [
-        {
-          "productId": "595376cdbf493511744064b0", "qty": "5"
-        },
-        {
-          "productId": "5953770dbf493511744064b1", "qty": "5"
-        }
-      ],
-      "createdate": new Date()
-    };
+    var today = new Date();
+    objectData.createdate=today;
+    // var objectData = {
+    //   "userId": "5950c54a6e8be65c5925bffa",
+    //   "products": [
+    //     {
+    //       "productId": "598acbc51cb602136ab86cf2", "qty": "5"
+    //     },
+    //     {
+    //       "productId": "5979c0b34318b87b9f7db6ee", "qty": "5"
+    //     }
+    //   ],
+    //   "createdate": today
+    // };
 
     for (var i = 0; i < objectData.products.length; i++) {
 
@@ -113,6 +114,44 @@ module.exports = function (Shoppingcart) {
 
       var productId = objectData.products[i].productId;
       var productQty = objectData.products[i].qty;
+
+      //****************
+      // Product.find({where: {_id: productId}})
+      //   .then(function(productData){
+      //
+      //     console.log("get product data ----> ", productData[0].product_description);
+      //
+      //     var updateShoppingCart = {
+      //       userId: objectData.userId,
+      //       productid: productId,
+      //       productqty: productQty,
+      //       instock: true,
+      //       product_cost: productData[0].product_cost,
+      //       product_description: productData[0].product_description,
+      //       createdate: today
+      //     };
+      //
+      //     Shoppingcart.upsert(updateShoppingCart, function (err, res) {
+      //       if (err) {
+      //         console.log("error");
+      //         cb({"message": "Something went wrong while adding data to cart"});
+      //         success = false;
+      //         return;
+      //       }
+      //       else {
+      //         //cb(null, {"message": "Product add to cart successfully"});
+      //         console.log("suhel sucess");
+      //         success = true
+      //
+      //       }
+      //     });
+      //   })
+      //   .catch(function(err){
+      //    console.log(err);
+      //   })
+
+      //*****************
+
 
       Product.find({where: {_id: productId}}, function (productErr, productData) {
 
@@ -130,31 +169,60 @@ module.exports = function (Shoppingcart) {
             instock: true,
             product_cost: productData[0].product_cost,
             product_description: productData[0].product_description,
-            createdate: objectData.createdate
+            createdate: today
           };
 
-          // ****************
+          // ****************  //objectData.createdate
           Shoppingcart.upsert(updateShoppingCart, function (err, res) {
             if (err) {
               console.log("error");
               cb({"message": "Something went wrong while adding data to cart"});
+              success = false;
               return;
             }
             else {
-              cb(null, {"message": "Product add to cart successfully"});
+              //cb(null, {"message": "Product add to cart successfully"});
+              console.log("Product add to cart successfully");
+              success = true
+
             }
           });
           // ****************
 
+          // `Shoppingcart.upsert(updateShoppingCart)
+          //   .then(function(res){
+          //     console.log("-->"+res)
+          //     success = true
+          //   })
+          //   .catch(function(err){
+          //     console.log(err);
+          //   })`
+
+
+
+          //************
+
         }
       });
 
-
     }
+
+
+
+    setTimeout(function () {
+      if (success) {
+        console.log("condition check");
+        cb(null, {"message": "Product add to cart successfully"});
+      }
+      else{
+        console.log("i am last");
+        cb(null, {"message": "sucess==false"});
+      }
+    }, 1000)
+
 
 
   }
 
 
-}
-;
+};
