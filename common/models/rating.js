@@ -31,9 +31,7 @@ module.exports = function (Rating) {
       // });
 
     Rating.find({where:{and:[{user_id:data.user_id},{product_id:data.product_id}]}},function (err,rate) {
-    //Rating.find({where:{user_id:data.user_id}},function (err,rate) {
-    //Rating.find({where: {product_id: '598af1bbafaa6fa490e3f6c7'}}, function (err, user) {
-      if (rate.length) {
+       if (rate.length) {
         console.log("update->", rate.length)
 
         Rating.update({where:{id: rate.id}}, {rating:data.rating}, function(err, results) {
@@ -71,19 +69,15 @@ module.exports = function (Rating) {
 
       var finalRatingOfProduct=sumOfRating/totalProduct.length;
       console.log(sumOfRating,"totalProduct",totalProduct.length+"final=>"+finalRatingOfProduct)
-      Rating.app.models.Product.update({where:{id:data.product_id}}, {product_avg_rating:finalRatingOfProduct},function (err, result) {
+      Rating.app.models.Product.update({id:'59771cc0ee32740640a49f5b'}, {product_avg_rating:finalRatingOfProduct},
+        function (err, result) {
         //console.log("Total product-->" + result.length)
         if (!err) {
           console.log("updates successfully"+result)
         }
         else {
-          // var err = new Error();
-          // err.statusCode = 404;
-          // err.message = 'something Went Wrong';
-          console.log("error->"+err)
+           console.log("error->"+err)
         }
-
-
       });
 
     })
