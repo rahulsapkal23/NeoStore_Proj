@@ -83,6 +83,11 @@
       "type": "hasMany",
       "model": "image",
       "foreignKey": ""
+    },
+    "shoppingcarts": {
+      "type": "hasMany",
+      "model": "shoppingcart",
+      "foreignKey": "productid"
     }
   },
   "acls": [],
