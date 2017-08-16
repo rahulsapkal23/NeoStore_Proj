@@ -27,6 +27,10 @@
       "type": "string",
       "required": false
     },
+    "provider": {
+      "type": "string",
+      "required": false
+    },
     "password": {
       "type": "string",
       "required": true
@@ -42,7 +46,7 @@
     },
     "phone_no": {
       "type": "number",
-      "required": true
+      "required": false
     },
     "birth_date": {
       "type": "date",
@@ -82,6 +86,11 @@
       "type": "hasMany",
       "model": "shoppingcart",
       "foreignKey": "userId"
+    },
+    "ratings": {
+      "type": "hasMany",
+      "model": "rating",
+      "foreignKey": "user_id"
     }
   },
   "acls": [
@@ -111,6 +120,13 @@
       "principalId": "$everyone",
       "permission": "ALLOW",
       "property": "AdminLogin"
+    },
+    {
+      "accessType": "EXECUTE",
+      "principalType": "ROLE",
+      "principalId": "$everyone",
+      "permission": "ALLOW",
+      "property": "socialLogin"
     }
   ],
   "methods": {}

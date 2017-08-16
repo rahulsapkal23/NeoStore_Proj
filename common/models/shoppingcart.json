@@ -43,7 +43,6 @@
       "model": "product",
       "foreignKey": "productid"
     }
-
   },
   "acls": [],
   "methods": {}

@@ -5,7 +5,7 @@ var apiRootUrl = "http://0.0.0.0:3000/api/";
 module.exports = function (Useraccount) {
 
   Useraccount.validatesUniquenessOf('email', {message: 'Email already exists'});
-  Useraccount.validatesInclusionOf('gender', {in: ['male', 'female'], message: {in: 'In valid gender'}});
+  Useraccount.validatesInclusionOf('gender', {in: ['male', 'female','none'], message: {in: 'In valid gender'}});
   Useraccount.validatesInclusionOf('is_active', {in: [true, false], message: {in: 'Only True and false are allowed'}});
 
 
@@ -17,11 +17,11 @@ module.exports = function (Useraccount) {
 
 
   Useraccount.disableRemoteMethodByName('prototype.__count__accessTokens');
-  Useraccount.disableRemoteMethodByName('prototype.__create__accessTokens');
+  //Useraccount.disableRemoteMethodByName('prototype.__create__accessTokens');
   Useraccount.disableRemoteMethodByName('prototype.__delete__accessTokens');
   Useraccount.disableRemoteMethodByName('prototype.__destroyById__accessTokens');
   Useraccount.disableRemoteMethodByName('prototype.__findById__accessTokens');
-  Useraccount.disableRemoteMethodByName('prototype.__get__accessTokens');
+  //Useraccount.disableRemoteMethodByName('prototype.__get__accessTokens');
   Useraccount.disableRemoteMethodByName('prototype.__updateById__accessTokens');
 
 
@@ -74,6 +74,18 @@ module.exports = function (Useraccount) {
       {arg: 'response', type: 'object'}
     ],
     http: {path: '/loginAdmin', verb: 'post'}
+  });
+
+//APi for hit on social login
+  Useraccount.remoteMethod('socialLogin', {
+    description: "API only for socail login",
+    accepts: [
+      { arg: 'data', type: 'object', http: { source: 'body' },require:true }
+    ],
+    returns: [
+      {type: 'object', root: true}
+    ],
+    http: {path: '/loginSocial', verb: 'post'}
   });
 
   //Useraccount.disableRemoteMethodByName('PATCH');
@@ -281,6 +293,149 @@ module.exports = function (Useraccount) {
 
 
     });
+
+  }
+
+
+
+  //function on social login
+  Useraccount.socialLogin=function(data,cb) {
+
+    console.log("-->"+data.email)
+    //******************************
+    //for gamail user
+    Useraccount.find({where: {and: [{gmail_id: data.email},{provider:'google'}]}}, function (err, user) {
+
+      if (err) {
+        //custom logger 
+        console.error(err);
+        //cb({"message": "some thing went Wrong"});
+        return;
+      }
+      else {
+
+        console.log(JSON.stringify(user)+"success=" + user.length);  //+ user[0].id
+        if (user.length) {
+            // Useraccount.generateVerificationToken(data.email,function (err, accessToken) {
+            //   console.log(accessToken);
+            //  } );
+
+          Useraccount.accessToken.create({userId:user[0].id}, function (err, accessToken) {
+            if (accessToken) {
+              console.log(accessToken);
+              cb(null,accessToken)
+
+            }
+            else {
+              //custom logger 
+              console.error('-->' + err);
+              cb(err);
+            }
+          });
+        }
+
+        else {
+          //creating user and generate access token
+          console.error(err);
+          if(data.provider=='google'){
+            Useraccount.create({gmail_id: data.email,
+                email:data.email,
+                first_name:data.name,
+                provider:"google",
+                is_active: true,
+                gender:'none',
+                password:'secret'
+              },
+              function(err, userInstance) {
+                if(err){
+                  console.log("err-->", err);
+                }
+                else
+                {console.log(userInstance);}
+                Useraccount.accessToken.create({userId:userInstance.id}, function (err, accessToken) {
+                  if (accessToken) {
+                    console.log("acess after register-->",accessToken);
+                    cb(null,accessToken)
+                  }
+                  else {
+                    //custom logger 
+                    console.error('-->' + err);
+                    cb(err);
+                  }
+                });
+              });
+          }
+
+
+        }
+
+      }
+    });
+
+    //for facebook
+    Useraccount.find({where: {and: [{facebook_id:data.email},{provider:'facebook'}]}}, function (err, user) {
+          console.log("in face book-->", data.email )
+      if (err) {
+        //custom logger 
+        console.error(err);
+        //cb({"message": "some thing went Wrong"});
+        return;
+      }
+      else {
+
+        console.log(JSON.stringify(user)+"success=" + user.length);  //+ user[0].id
+        if (user.length) {
+              console.log("user id-->",user[0].id)
+          Useraccount.accessToken.create({userId:user[0].id}, function (err, accessToken) {
+            if (accessToken) {
+              console.log("acess after register-->",accessToken);
+              cb(null,accessToken)
+            }
+            else {
+              //custom logger 
+              console.error('-->' + err);
+              cb(err);
+            }
+          });
+        }
+
+        else {
+          //creating user and generate access token
+          if(data.provider=='facebook'){
+            Useraccount.create({facebook_id: data.email,
+                email:data.email,
+                first_name:data.name,
+                is_active: true,
+                provider:'facebook',
+                gender:'none',
+                password:'secret'
+              },
+              function(err, userInstance) {
+                if(err){
+                  console.log("err-->", err);
+                }
+                else
+                {console.log(userInstance);}
+                Useraccount.accessToken.create({userId:userInstance.id}, function (err, accessToken) {
+                  if (accessToken) {
+                    console.log("acess after register-->",accessToken);
+                    cb(null,accessToken)
+                  }
+                  else {
+                    //custom logger 
+                    console.error('-->' + err);
+                    cb(err);
+                  }
+                });
+              });
+          }
+
+        }
+
+      }
+    });
+
+    //******************************
 
   }
 

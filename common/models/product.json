@@ -78,11 +78,15 @@
   },
   "validations": [],
   "relations": {
-
     "images": {
       "type": "hasMany",
       "model": "image",
       "foreignKey": ""
+    },
+    "ratings": {
+      "type": "hasMany",
+      "model": "rating",
+      "foreignKey": "product_id"
     }
   },
   "acls": [],
