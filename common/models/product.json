@@ -87,6 +87,11 @@
       "type": "hasMany",
       "model": "rating",
       "foreignKey": "product_id"
+    },
+    "shoppingcarts": {
+      "type": "hasMany",
+      "model": "shoppingcart",
+      "foreignKey": "productid"
     }
   },
   "acls": [],

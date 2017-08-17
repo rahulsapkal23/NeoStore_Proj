@@ -1,6 +1,7 @@
 'use strict';
 var loopback = require('loopback');
 var Product = loopback.getModel("product");
+var Promise = require('bluebird');
 module.exports = function (Shoppingcart) {
 
 
@@ -86,139 +87,80 @@ module.exports = function (Shoppingcart) {
 
   Shoppingcart.addToCart = function (data, cb) {
 
-    console.log("into add to cart", JSON.stringify(data));
+    //console.log("into add to cart", JSON.stringify(data));
 
-    var objectData = data; // Aniket uncomment and check it and comment the below hardCoded data
+    var objectData = data;
 
-    var success = false;
-    // need to insert data into db
-    var today = new Date();
-    objectData.createdate=today;
-    // var objectData = {
-    //   "userId": "5950c54a6e8be65c5925bffa",
-    //   "products": [
-    //     {
-    //       "productId": "598acbc51cb602136ab86cf2", "qty": "5"
-    //     },
-    //     {
-    //       "productId": "5979c0b34318b87b9f7db6ee", "qty": "5"
-    //     }
-    //   ],
-    //   "createdate": today
-    // };
-
-    for (var i = 0; i < objectData.products.length; i++) {
-
-      console.log("products Length ---->", i);
+    // var today = new Date();
+    objectData.createdate = new Date();
+    var insertCartArr = [];
 
 
-      var productId = objectData.products[i].productId;
-      var productQty = objectData.products[i].qty;
+// console.log("objectData.products" , objectData.products);
 
-      //****************
-      // Product.find({where: {_id: productId}})
-      //   .then(function(productData){
-      //
-      //     console.log("get product data ----> ", productData[0].product_description);
-      //
-      //     var updateShoppingCart = {
-      //       userId: objectData.userId,
-      //       productid: productId,
-      //       productqty: productQty,
-      //       instock: true,
-      //       product_cost: productData[0].product_cost,
-      //       product_description: productData[0].product_description,
-      //       createdate: today
-      //     };
-      //
-      //     Shoppingcart.upsert(updateShoppingCart, function (err, res) {
-      //       if (err) {
-      //         console.log("error");
-      //         cb({"message": "Something went wrong while adding data to cart"});
-      //         success = false;
-      //         return;
-      //       }
-      //       else {
-      //         //cb(null, {"message": "Product add to cart successfully"});
-      //         console.log("suhel sucess");
-      //         success = true
-      //
-      //       }
-      //     });
-      //   })
-      //   .catch(function(err){
-      //    console.log(err);
-      //   })
+    Promise.mapSeries(objectData.products, function (product) {
 
-      //*****************
+      var productId = product.productId;
+      var productQty = product.qty;
+      // console.log("get product data ----> ", productId);
 
+      //debugger;
+      var updateShoppingCart = {
+        userId: objectData.userid,
+        productid: productId,
+        productqty: productQty,
+        instock: true,
+        product_cost: null,
+        product_description: null,
+        createdate: objectData.createdate
+      };
+      return Product.find({where: {_id: productId}})
+        .then(function (productData) {
+          updateShoppingCart.product_cost = productData[0].product_cost;
+          updateShoppingCart.product_description = productData[0].product_description;
 
-      Product.find({where: {_id: productId}}, function (productErr, productData) {
+          return Shoppingcart.find({where: {productid: productId}});
+        })
+        .then(function (getCartData) {
+          console.log("Qty :", getCartData[0].productqty);
+          if (getCartData.length != 0) {
+            // console.log("qty merged : ");
+            updateShoppingCart.productqty = parseInt(updateShoppingCart.productqty) + parseInt(getCartData[0].productqty);
+           // console.log("qty value: "+ updateShoppingCart.productqty);
+            // Shoppingcart.upsert(updateShoppingCart);
+            //Shoppingcart.updateAttribute("productqty",updateShoppingCart.productqty);
+            Shoppingcart.updateAll({"userId":objectData.userid,"productid":productId},{"productqty":updateShoppingCart.productqty});
 
-        if (productErr) {
-          console.log("unable to get Product Data : error");
-        }
-        else {
-          //console.log("get product data ----> ", productData);
-          console.log("get product data ----> ", productData[0].product_description);
+          }
+          else {
+            // console.log("into else");
+            insertCartArr.push(updateShoppingCart);
+          }
 
-          var updateShoppingCart = {
-            userId: objectData.userId,
-            productid: productId,
-            productqty: productQty,
-            instock: true,
-            product_cost: productData[0].product_cost,
-            product_description: productData[0].product_description,
-            createdate: today
-          };
+        })
+        .catch(function (productErr) {
+          // console.log("Unable to get product data. ******* into catch ");
+          insertCartArr.push(updateShoppingCart);
+          return null;
+          // Promise.resolve({});
+        });
+    })
 
-          // ****************  //objectData.createdate
-          Shoppingcart.upsert(updateShoppingCart, function (err, res) {
-            if (err) {
-              console.log("error");
-              cb({"message": "Something went wrong while adding data to cart"});
-              success = false;
-              return;
-            }
-            else {
-              //cb(null, {"message": "Product add to cart successfully"});
-              console.log("Product add to cart successfully");
-              success = true
+      .then(function (data) {
+        // console.log("show products into insertCartArr : ", insertCartArr);
 
-            }
-          });
-          // ****************
+        return Shoppingcart.create(insertCartArr);
 
-          // `Shoppingcart.upsert(updateShoppingCart)
-          //   .then(function(res){
-          //     console.log("-->"+res)
-          //     success = true
-          //   })
-          //   .catch(function(err){
-          //     console.log(err);
-          //   })`
+      })
+      .then(function (cartCreated) {
 
-
-
-          //************
-
-        }
-      });
-
-    }
-
-
-
-    setTimeout(function () {
-      if (success) {
-        console.log("condition check");
         cb(null, {"message": "Product add to cart successfully"});
-      }
-      else{
-        console.log("i am last");
-        cb(null, {"message": "sucess==false"});
-      }
-    }, 1000)
+      })
+      .catch(function (error) {
+        // console.log("i am last");
+        cb(null, {"message": "Something went wrong"});
+      })
+
 
 
 

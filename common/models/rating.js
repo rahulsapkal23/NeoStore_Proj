@@ -32,9 +32,10 @@ module.exports = function (Rating) {
 
     Rating.find({where:{and:[{user_id:data.user_id},{product_id:data.product_id}]}},function (err,rate) {
        if (rate.length) {
-        console.log("update->", rate.length)
+        console.log("update->", rate)
 
-        Rating.update({where:{id: rate.id}}, {rating:data.rating}, function(err, results) {
+
+        Rating.update({id: rate[0].id}, {rating:data.rating}, function(err, results) {
           updateRatingOfProduct(data)
           cb(err, "rating updated");
         });
@@ -69,11 +70,11 @@ module.exports = function (Rating) {
 
       var finalRatingOfProduct=sumOfRating/totalProduct.length;
       console.log(sumOfRating,"totalProduct",totalProduct.length+"final=>"+finalRatingOfProduct)
-      Rating.app.models.Product.update({id:'59771cc0ee32740640a49f5b'}, {product_avg_rating:finalRatingOfProduct},
+      Rating.app.models.Product.update({id:data.product_id}, {product_avg_rating:finalRatingOfProduct},
         function (err, result) {
         //console.log("Total product-->" + result.length)
         if (!err) {
-          console.log("updates successfully"+result)
+          console.log("updates successfully",result)
         }
         else {
            console.log("error->"+err)
