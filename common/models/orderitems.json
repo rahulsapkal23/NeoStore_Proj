@@ -7,7 +7,7 @@
     "validateUpsert": true
   },
   "properties": {
-    "productid": {
+    "productId": {
       "type": "string",
       "required": true
     },
@@ -20,7 +20,7 @@
       "type": "number",
       "required": true
     },
-    "orderid": {
+    "orderId": {
       "type": "string",
       "required": true
     }

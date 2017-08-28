@@ -2,6 +2,9 @@
 var loopback = require('loopback');
 var Product = loopback.getModel("product");
 var Promise = require('bluebird');
+var waterfall =require('async/waterfall');
+var each =require('async/each');
+
 module.exports = function (Shoppingcart) {
 
 
@@ -10,7 +13,7 @@ module.exports = function (Shoppingcart) {
     console.log("into before remote method");
 
     context.args.data.createdate = new Date();
-    //    context.args.data.modified_date=new Date();
+    //context.args.data.modified_date=new Date();
     //context.args.data.publisherId = context.req.accessToken.userId;
     //Useraccount.validatesPresenceOf('password', {message: 'Cannot be blank'});
 
@@ -46,28 +49,78 @@ module.exports = function (Shoppingcart) {
   Shoppingcart.remoteMethod('getCartDetails', {
     description: "get All CartDetails for a particular user",
     accepts: [{arg: 'userid', type: 'string', require: true}],
-    returns: [{arg: 'response', type: 'object'}],
+    returns: [{type: 'object', root: true}],
     http: {path: '/getCart', verb: 'get'},
   });
 
+  /******************************* get cart details of particular user *****************************************/
   Shoppingcart.getCartDetails = function (userid, cb) {
-
-    var userID = userid.toString();
-    console.log("id placed-->" + userID);
-    //Shoppingcart.find({filter:{'where':{'userid':userid}}},function (err, cart) { 
-    Shoppingcart.find({where: {userId: userID}}, function (err, cart) {
-      console.log("get data ---> " + JSON.stringify(cart));
-      if (err) {
-        console.log("error");
-        cb({"message": "Something went wrong"});
-        return;
-      }
-      else {
-        console.log("success", JSON.stringify(cart));
-
-        cb(null, cart);
-      }
+     // console.log("userid->",userid)
+     waterfall([
+      myFirstFunction,
+      mySecondFunction,
+      myLastFunction,
+    ], function (err, result) {
+       //final call back
+      console.log("done final->"+result)
+       if(!err)
+       {
+         cb(null,result)
+       }
+       else {
+        cb("something went wrong");
+       }
     });
+    function myFirstFunction(callback) {
+      //get the cart of a user and return it
+      var cartData;
+      console.log("userid->",userid)
+      var imgmodel= Shoppingcart.app.models.image;
+      //Shoppingcart.find({where:{userId:userid}},function (err, cart) {
+      Shoppingcart.find({'where':{userId:userid}},function (err, cart) {
+      cartData = cart
+        console.log("two-->",cartData.length)
+        callback(null,cartData);
+      })
+
+
+    }
+    function mySecondFunction(cartData, callback) {
+      //loop for image and push it
+      //console.log("second", cartData.productid)
+      var  finalarry=[];
+      var imgmodel= Shoppingcart.app.models.image;
+
+      each(cartData, function(cartData, callback) {
+        imgmodel.find({where:{productId:cartData.productid}},function (err,res) {
+              console.log('pro img->',res[0]);
+             var obj={
+               productId: res[0].productId,
+               product_producer:cartData.product_producer,
+               product_name:cartData.product_name,
+               productqty: cartData.productqty, 
+               instock: true, 
+               product_cost:cartData.product_cost ,
+               images:[res[0]]
+              }
+          finalarry.push(obj)
+          callback(null,finalarry);
+            })
+
+      }, function(err,res) {
+              if( err ) {
+                   console.log('some thing went wrong');
+        } else {
+          console.log('All files have been processed successfully',finalarry);
+          callback(null,finalarry);
+        }
+      });
+    }
+    function myLastFunction(arg1, callback) {
+           console.log("done1--->",arg1)
+           callback(null, arg1);
+
+    }
   }
 
   /**************************** add to cart **********************************************/
@@ -87,7 +140,7 @@ module.exports = function (Shoppingcart) {
 
   Shoppingcart.addToCart = function (data, cb) {
 
-    //console.log("into add to cart", JSON.stringify(data));
+    console.log("into add to cart", JSON.stringify(data));
 
     var objectData = data;
 
@@ -102,7 +155,7 @@ module.exports = function (Shoppingcart) {
 
       var productId = product.productId;
       var productQty = product.qty;
-      // console.log("get product data ----> ", productId);
+       console.log("get product data ----> ", productId,"-->",productQty);
 
       //debugger;
       var updateShoppingCart = {
@@ -111,13 +164,15 @@ module.exports = function (Shoppingcart) {
         productqty: productQty,
         instock: true,
         product_cost: null,
-        product_description: null,
+        product_name: null,
+        product_producer:null,
         createdate: objectData.createdate
       };
       return Product.find({where: {_id: productId}})
         .then(function (productData) {
           updateShoppingCart.product_cost = productData[0].product_cost;
-          updateShoppingCart.product_description = productData[0].product_description;
+          updateShoppingCart.product_name = productData[0].product_name;
+          updateShoppingCart.product_producer = productData[0].product_producer;
 
           return Shoppingcart.find({where: {productid: productId}});
         })
