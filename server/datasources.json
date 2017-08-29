@@ -4,13 +4,13 @@
     "connector": "memory"
   },
   "connect_strong_Database": {
-    "host": "127.0.0.1",
-    "port": "27017",
-    "url": "mongodb://127.0.0.1:27017/NeoStore_Proj_DB",
-    "database": "NeoStore_Proj_DB",
-    "password": "",
-    "name": "connect_strong_Database",
-    "user": "",
+    "host": "ds163613.mlab.com",
+    "port": "63613",
+    "url": "mongodb://suhel:neostore@ds163613.mlab.com:63613/neostore",
+    "database": "neostore",
+    "password": "neostore",
+    "name": "neostore",
+    "user": "suhel",
     "connector": "mongodb"
   },
   "neoemail": {

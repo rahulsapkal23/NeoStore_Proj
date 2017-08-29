@@ -1,15 +1,24 @@
 'use strict';
 var waterfall =require('async/waterfall');
 var each =require('async/each');
+var stripe = require('stripe')('sk_test_xoQyYRfMagOtTqkEAYGI2OGd');
 
 module.exports = function(Order) {
 
 
-  /********************* APi for Final order***********************************/
+  /********************* APi for Final order with stripe integration ***********************************/
   /****           fotmat of data to be post
    * {
     "userId":"5975ba6df6d9e115d3871e6a",
     "addressId":"007",
+    "email":"a@b.com",
+    "card": {
+            exp_month: 10,
+            exp_year: 2018,
+            number:4242424242424242,
+            cvc: 100
+    },
+
     "products":[{
                  "productId":"59770dbcee32740640a49f59",
                 "quantity":"1"
@@ -41,6 +50,7 @@ module.exports = function(Order) {
 
     waterfall([
       myFirstFunction,
+      verifyCard,
       mySecondFunction,
       myThirdFunction,
       myLastFunction,
@@ -54,6 +64,7 @@ module.exports = function(Order) {
         console.log("Final response->", result);
       }
     });
+
     function myFirstFunction(callback) {
       //calculating toal cost of product and giving it to second function
       console.log("data 1->", data);
@@ -80,6 +91,46 @@ module.exports = function(Order) {
           }
         });
       }
+
+    }
+
+    function verifyCard(data,toatalcost,callback) {
+
+      console.log("in veryfy",toatalcost);
+
+      stripe.customers.create({
+        email: 'foo-customer@example.com'
+      }).then(function(customer){
+        return stripe.customers.createSource(customer.id, {
+          source: {
+            object: 'card',
+            exp_month: 10,
+            exp_year: 2018,
+            number:4242424242424242,
+            cvc: 100
+          }
+        });
+      }).then(function(source) {
+        console.log("source--> ",source)
+        var num=0.00;
+        num=(toatalcost*100);
+        return stripe.charges.create({
+          amount: num,
+          currency: 'INR',
+          customer: source.customer,
+          source:source.id
+        });
+      }).then(function(charge) {
+        console.log("charges sucesss-->",charge)
+        callback(null, data, toatalcost);
+        // New charge created on a new customer
+      }).catch(function(err) {
+        console.log("err-->",err)
+        callback(err);
+        // Deal with an error
+      });
+
+
 
     }
     function mySecondFunction(data, toatalcost, callback) {
@@ -137,13 +188,13 @@ module.exports = function(Order) {
           } else {
             console.log('order item inserted',res);
             //callback(null, data, toatalcost);
-            callback(null, data);
+            callback(null, data,resSecond);
           }
         });
       }
 
     }
-    function myLastFunction(data, callback) {
+    function myLastFunction(data,resSecond, callback) {
       // remove product from cart table
       console.log("data4->",data.userId);
       Order.app.models.shoppingcart.find({where:{userId:data.userId}},function (err,res) {
@@ -167,9 +218,14 @@ module.exports = function(Order) {
                 console.log('some thing went wrong while deleting');
               } else {
                 console.log('order item inserted');
-                callback(null, 'order placed successfully');
+                console.log("final order-->",resSecond)
+                var obj={};
+                obj.orderId=resSecond.id;
+                obj.message="order placed successfully";
+                callback(null, obj);
               }
             });
+
 
           }
           else {
@@ -182,7 +238,7 @@ module.exports = function(Order) {
   }
 
 
-  //
+
 
 
 

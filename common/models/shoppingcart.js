@@ -221,5 +221,40 @@ module.exports = function (Shoppingcart) {
 
   }
 
+  /*****************getting cart count of partcular user ************************/
+  Shoppingcart.remoteMethod('getCartCount', {
+    description: "Getting cart count of partcular user",
+    accepts: [
+      {arg: 'userAccountId', type: 'string', require: true}
+    ],
+    returns: [
+      {type: 'array', root: true}
+    ],
+    //http: {path: '/getAddressbyUserId', verb: 'get'}
+    http : {verb : 'get', path : '/cartcount/:userAccountId'}
+  });
+
+  Shoppingcart.getCartCount=function (userAccountId,cb) {
+    console.log("-->",userAccountId);
+    Shoppingcart.find({'where':{userId:userAccountId}},function (err, cart) {
+      //cartData = cart
+      console.log("two-->",cart.length)
+      if(cart.length){
+        var obj={
+          userId:userAccountId,
+          cartCount:cart.length
+        }
+
+      }else {
+        var obj={
+          userId:userAccountId,
+          cartCount:0
+        }
+      }
+      cb(null,obj);
+
+    })
+  }
+
 
 };
