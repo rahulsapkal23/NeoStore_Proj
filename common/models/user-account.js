@@ -54,14 +54,8 @@ module.exports = function (Useraccount) {
 
   Useraccount.remoteMethod('AdminDashboard', {
     description: "On admin login to get details for dash board",
-    // accepts: [
-    //   {arg: 'email', type: 'string', require: true},
-    //   {arg: 'password', type: 'string', require: true}
-    // ],
-    returns: [
-      {arg: 'response', type: 'object'}
-    ],
-    http: {path: '/adminDashboard', verb: 'get'}
+    returns: [{type: 'object', root: true}],
+     http: {path: '/adminDashboard', verb: 'get'}
   });
   Useraccount.remoteMethod('AdminLogin', {
     description: "API only for Admin login",
@@ -86,6 +80,28 @@ module.exports = function (Useraccount) {
       {type: 'object', root: true}
     ],
     http: {path: '/loginSocial', verb: 'post'}
+  });
+
+  Useraccount.remoteMethod('contactUs', {
+    description: "API for Contact Us",
+    accepts: [
+      { arg: 'data', type: 'object', http: { source: 'body' },require:true }
+    ],
+    returns: [
+      {type: 'object', root: true}
+    ],
+    http: {path: '/contactus', verb: 'post'}
+  });
+
+  Useraccount.remoteMethod('mailFromAdmin', {
+    description: "API for Contact Us",
+    accepts: [
+      { arg: 'data', type: 'object', http: { source: 'body' },require:true }
+    ],
+    returns: [
+      {type: 'object', root: true}
+    ],
+    http: {path: '/mailAdmin', verb: 'post'}
   });
 
   //Useraccount.disableRemoteMethodByName('PATCH');
@@ -205,29 +221,15 @@ module.exports = function (Useraccount) {
 
       }
     });
-    //UserModel.find({where:{id: userid}}, function(err, data){
-    //   if (err) {
-    //     //custom logger 
-    //     console.error(err);
-    //     cb({"message": "some thing went Wrong"});
-    //     return;
-    //   }
-    //   else {
-    //
-    //     console.log( "success=" + JSON.stringify(data));
-    //   }
-    // });
+
   }
 
 
   Useraccount.updateFromAdmin = function (user_id, first_name, last_name, role, phone_no, birth_date, cb) {
-    console.log("-->" + user_id + "" + last_name + "" + role + "" + phone_no + "" + birth_date);
-
-    //let data={};
-    //Useraccount.updateAttributes(data, callback)
+    //console.log("-->" + user_id + "" + last_name + "" + role + "" + phone_no + "" + birth_date);
 
     Useraccount.find({where: {"id": user_id}}, function (err, user) {
-      console.log("data-->" + JSON.stringify(user) + "-------" + user.length);
+     // console.log("data-->" + JSON.stringify(user) + "-------" + user.length);
       if (user.length) {
 
       }
@@ -238,25 +240,47 @@ module.exports = function (Useraccount) {
     });
   }
 
-  //Useraccount.observe("",)
-
-
 
   Useraccount.AdminDashboard = function (cb) {
-    console.log("in Dashboard API");
-    var output = {};
+    //console.log("in Dashboard API");
+    var output = [];
 
-    Useraccount.find({where: {and: [{role: 'admin'}, {is_active: true}]}}, function (err, result) {
-      console.log("result-->" + result.length)
+    Useraccount.app.models.order.find(function (err, result) {
+      console.log("order-->" + result.length)
       if (!err) {
-        output.Admin_User = result.length;
+        var output1={
+          "title":"Total Products",
+          "value": result.length
+        };
+        output.push(output1);
+
       }
       else {
         var err = new Error();
         err.statusCode = 404;
         err.message = 'something Went Wrong';
         cb(err);
-        return;
+
+      }
+
+    });
+
+    Useraccount.app.models.shoppingcart.find(function (err, result) {
+      console.log("shoppingcart-->" + result.length)
+      if (!err) {
+        //output.In_cart_product= result.length;
+        var output2={
+          "title":"Cart Product",
+          "value": result.length
+        };
+        output.push(output2);
+      }
+      else {
+        var err = new Error();
+        err.statusCode = 404;
+        err.message = 'something Went Wrong';
+        cb(err);
+
       }
 
     });
@@ -264,7 +288,12 @@ module.exports = function (Useraccount) {
     Useraccount.find(function (err, result) {
       console.log("Total Users-->" + result.length)
       if (!err) {
-        output.Total_User = result.length;
+       // output.Total_User = result.length;
+        var output3={
+          "title":"Total User",
+          "value": result.length
+        };
+        output.push(output3);
         //cb(null,output);
       }
       else {
@@ -280,7 +309,12 @@ module.exports = function (Useraccount) {
     Useraccount.app.models.Product.find(function (err, result) {
       console.log("Total product-->" + result.length)
       if (!err) {
-        output.Total_Product = result.length;
+        //output.Total_Product = result.length;
+        var output4={
+          "title":"Total Product",
+          "value": result.length
+        };
+        output.push(output4);
         cb(null, output);
       }
       else {
@@ -288,7 +322,7 @@ module.exports = function (Useraccount) {
         err.statusCode = 404;
         err.message = 'something Went Wrong';
         cb(err);
-        return;
+
       }
 
 
@@ -438,6 +472,90 @@ module.exports = function (Useraccount) {
     //******************************
 
   }
+
+
+/******************** contact us API ************************/
+  /**    data fro hitting tis api
+   {
+   "user_emailId":"a@b.com",
+   "subject":"this is to be subject",
+   "body":"this is our body of email"
+   }
+   */
+  Useraccount.contactUs=function (data,cb) {
+    console.log("data->",data)
+
+
+    // sending mail to admin
+    Useraccount.app.models.Email.send({
+      to: "aniket.pracheta@neosofttech.com",//"sandip.ghadge@wwindia.com",//info.email,
+      from: data.user_emailId,
+      subject: data.subject,
+      //html: "<a href='" + setURL + "'>Click Me to Change Password</a>"
+      html:data.body //html_body
+    }, function (err, mail) {
+      console.log('welcome email sent!');
+      if (!err) {
+        console.log("mail send to admin");
+        //return true;
+      } else {
+        cb(err);
+      }
+    });
+
+
+    // send mail to user
+    Useraccount.app.models.Email.send({
+      to: data.user_emailId,//"sandip.ghadge@wwindia.com",//info.email,
+      from: 'aniket.pracheta@neosofttech.com',
+      subject: 'Thanks for your mail',
+      //html: "<a href='" + setURL + "'>Click Me to Change Password</a>"
+      html: 'We will get back to you soon'//html_body
+    }, function (err, mail) {
+      console.log('welcome email sent!');
+      if (!err) {
+        console.log("mail send user");
+        cb(null,"Mail sent successfully")
+      } else {
+        cb(err)
+              }
+    });
+
+  }
+
+
+
+/*************************** mail from admin ****************/
+  /**    data fro hitting tis api
+    {
+     "user_emailId":"a@b.com",
+     "to":"a@b.com",
+     "subject":"this is to be subject",
+     "body":"this is our body of email"
+     }
+  */
+  Useraccount.mailFromAdmin=function (data,cb) {
+  console.log("data->",data)
+
+  Useraccount.app.models.Email.send({
+    to:data.user_emailId, //"suhel.khan@neosofttech.com",//"sandip.ghadge@wwindia.com",//info.email,
+    from:data.to,
+    subject: data.subject,
+    //html: "<a href='" + setURL + "'>Click Me to Change Password</a>"
+    html:data.body//html_body
+  }, function (err, mail) {
+    console.log('welcome email sent!');
+    if (!err) {
+      console.log("mail send");
+      cb(null,"Mail sent successfully")
+      //return true;
+    } else {
+      cb("error->",err);
+      //return false;
+    }
+  });
+
+}
 
 
 };

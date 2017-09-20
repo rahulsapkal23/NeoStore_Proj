@@ -4,7 +4,7 @@ module.exports = function (Rating) {
 
   //APi for inserting Rating if user is register
   Rating.remoteMethod('rateProduct', {
-    description: "API only for socail login",
+    description: "API for rating the products",
     accepts: [
       {arg: 'data', type: 'object', http: {source: 'body'}, require: true}
     ],
@@ -45,7 +45,10 @@ module.exports = function (Rating) {
         Rating.create({user_id:data.user_id,
                product_id:data.product_id,
               rating:data.rating},function (err,productinserted) {
-          if(err){ console.log(err)}
+          if(err){
+            console.log(err)
+            cb("Some thing went wrong")
+          }
           else {
             updateRatingOfProduct(data)
             cb(null,"Thanks for Rating")

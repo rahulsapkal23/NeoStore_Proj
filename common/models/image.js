@@ -9,7 +9,7 @@ var UserAcc = loopback.getModel("user_account");
 module.exports = function(Image) {
 
   var thumb = require('node-thumbnail').thumb;
-  var imgURL = "http://10.0.100.213:8081";
+  var imgURL = "http://10.0.100.213:8080";
   var containerName = 'image';
   var thumbpath;
   var imgType;
@@ -40,77 +40,77 @@ module.exports = function(Image) {
         {
           imgType = "Product";
           Product.find(
-                      {where: {id : fileObj.fields.productId[0]} },
-                      function(err, product){
-                        if(!err){
-                          // console.log("sucess product"+JSON.stringify(product));
-                          // console.log("sucess product.length"+JSON.stringify(product.length));
-                          if(product.length == 0){
-                            // console.log("no such user exist");
-                            cb({"statusCode" : 401,"message": "product id is Invalid"});
-                            return;
-                          }
-                          else {
-                            // console.log('success fileObj123', JSON.stringify(fileObj));
-                            var finalresponse = [];
-                            let fileLength = fileObj.files.file.length;
-                            // console.log('fileLength', fileLength)
-                            let ln = 0;
-                            fileObj.files.file.forEach((fileInfo) => {
-                            thumb({
-                              prefix: '_',
-                              suffix: '_250thumb',
-                              source: 'storage/image/' + fileInfo.name, //please give server related path
-                              destination: 'storage/thumbnail',
-                              overwrite: true,
-                              width: 250
-                            }).then((done) => {
-                            var thumbpath1 =done[0].dstPath;
-                            thumb({
-                              prefix: '_',
-                              suffix: '_100thumb',
-                              source: 'storage/image/' + fileInfo.name, //please give server related path
-                              destination: 'storage/thumbnail',
-                              overwrite: true,
-                              width: 100
-                            }).then( (done) => {
-                            var thumbpath2 =done[0].dstPath;
+            {where: {id : fileObj.fields.productId[0]} },
+            function(err, product){
+              if(!err){
+                // console.log("sucess product"+JSON.stringify(product));
+                // console.log("sucess product.length"+JSON.stringify(product.length));
+                if(product.length == 0){
+                  // console.log("no such user exist");
+                  cb({"statusCode" : 401,"message": "product id is Invalid"});
+                  return;
+                }
+                else {
+                  // console.log('success fileObj123', JSON.stringify(fileObj));
+                  var finalresponse = [];
+                  let fileLength = fileObj.files.file.length;
+                  // console.log('fileLength', fileLength)
+                  let ln = 0;
+                  fileObj.files.file.forEach((fileInfo) => {
+                    thumb({
+                      prefix: '_',
+                      suffix: '_250thumb',
+                      source: 'storage/image/' + fileInfo.name, //please give server related path
+                    destination: 'storage/thumbnail',
+                    overwrite: true,
+                    width: 250
+                }).then((done) => {
+                    var thumbpath1 =done[0].dstPath;
+                  thumb({
+                    prefix: '_',
+                    suffix: '_100thumb',
+                    source: 'storage/image/' + fileInfo.name, //please give server related path
+                    destination: 'storage/thumbnail',
+                    overwrite: true,
+                    width: 100
+                  }).then( (done) => {
+                    var thumbpath2 =done[0].dstPath;
 
-                            Image.create({
-                                    name: fileInfo.name,
-                                    type: fileInfo.type,
-                                    container: fileInfo.container,
-                                     isActive: true,
-                                    ImgURL:  imgURL+"/storage/"+fileInfo.container +"/" + fileInfo.name,
-                                    ThumbURL250:imgURL+"/"+thumbpath1,
-                                    ThumbURL100:imgURL+"/"+thumbpath2,
-                                    productId : fileObj.fields.productId[0],
-                                    // userId: fileObj.fields.userId[0]
-                                  }, function (err, obj) {
-                                    if (err !== null) {
-                                      cb(err);
-                                    } else {
-                                      // console.log("obj is  -->>>" + JSON.stringify(obj));
-                                      finalresponse.push(obj);
-                                      ln = ln + 1;
-                                      // console.log('ln', ln)
-                                      if ( fileLength === ln ) {
-                                        // console.log('equal')
-                                        // console.log("finalresponse is  -->>>" + finalresponse);
-                                        cb(null, finalresponse);
-                                        return;
-                                      }
-                                    }
-                            })
-                            })
-                          })
-                          });
-                          }
-                        }else{
-                          console.log("error is",JSON.stringify(err));
-                          cb(err);
-                        }
+                  Image.create({
+                    name: fileInfo.name,
+                    type: fileInfo.type,
+                    container: fileInfo.container,
+                    isActive: true,
+                    ImgURL:  imgURL+"/storage/"+fileInfo.container +"/" + fileInfo.name,
+                    ThumbURL250:imgURL+"/"+thumbpath1,
+                    ThumbURL100:imgURL+"/"+thumbpath2,
+                    productId : fileObj.fields.productId[0],
+                    // userId: fileObj.fields.userId[0]
+                  }, function (err, obj) {
+                    if (err !== null) {
+                      cb(err);
+                    } else {
+                      // console.log("obj is  -->>>" + JSON.stringify(obj));
+                      finalresponse.push(obj);
+                      ln = ln + 1;
+                      // console.log('ln', ln)
+                      if ( fileLength === ln ) {
+                        // console.log('equal')
+                        // console.log("finalresponse is  -->>>" + finalresponse);
+                        cb(null, finalresponse);
+                        return;
                       }
+                    }
+                  })
+                })
+                })
+                });
+                }
+              }else{
+                console.log("error is",JSON.stringify(err));
+                cb(err);
+              }
+            }
           )
         }
         else
@@ -149,28 +149,28 @@ module.exports = function(Image) {
                     console.log('Success');
                     var thumbpath2 =files[0].dstPath;
 
-                   Image.create({
-                                  name: fileInfo.name,
-                                  type: fileInfo.type,
-                                   isActive: true,
-                                  container: fileInfo.container,
-                                  ImgURL:  imgURL+"/storage/"+fileInfo.container +"/" + fileInfo.name,
-                                  ThumbURL:imgURL+"/"+thumbpath2,
-                                  userId: fileObj.fields.userId[0]
-                                }, function (err, obj) {
-                                  if (err !== null) {
-                                    cb(err);
-                                  } else {
-                                    console.log("obj is  -->>>"+JSON.stringify(obj));
-                                    var response ={
-                                      "id":obj.id,
-                                      "userId": obj.userId,
-                                      "ImgURL": obj.ImgURL,
-                                      "ThumbURL":obj.ThumbURL
-                                    };
-                                    cb(null, response);
-                                  }
-                                });
+                    Image.create({
+                      name: fileInfo.name,
+                      type: fileInfo.type,
+                      isActive: true,
+                      container: fileInfo.container,
+                      ImgURL:  imgURL+"/storage/"+fileInfo.container +"/" + fileInfo.name,
+                      ThumbURL:imgURL+"/"+thumbpath2,
+                      userId: fileObj.fields.userId[0]
+                    }, function (err, obj) {
+                      if (err !== null) {
+                        cb(err);
+                      } else {
+                        console.log("obj is  -->>>"+JSON.stringify(obj));
+                        var response ={
+                          "id":obj.id,
+                          "userId": obj.userId,
+                          "ImgURL": obj.ImgURL,
+                          "ThumbURL":obj.ThumbURL
+                        };
+                        cb(null, response);
+                      }
+                    });
 
 
 
@@ -227,27 +227,27 @@ module.exports = function(Image) {
                     var thumbpath2 =files[0].dstPath;
 
                     Image.create({
-                                  name: fileInfo.name,
-                                  type: fileInfo.type,
-                                  isActive: true,
-                                  container: fileInfo.container,
-                                  ImgURL:  imgURL+"/storage/"+fileInfo.container +"/" + fileInfo.name,
-                                  ThumbURL:imgURL+"/"+thumbpath2,
-                                  categoryId: fileObj.fields.categoryId[0]
-                                }, function (err, obj) {
-                                  if (err !== null) {
-                                    cb(err);
-                                  } else {
-                                    console.log("obj is  -->>>"+JSON.stringify(obj));
-                                    var response ={
-                                      "id":obj.id,
-                                      "categoryId": obj.categoryId,
-                                      "ImgURL": obj.ImgURL,
-                                      "ThumbURL":obj.ThumbURL
-                                    };
-                                    cb(null, response);
-                                  }
-                                });
+                      name: fileInfo.name,
+                      type: fileInfo.type,
+                      isActive: true,
+                      container: fileInfo.container,
+                      ImgURL:  imgURL+"/storage/"+fileInfo.container +"/" + fileInfo.name,
+                      ThumbURL:imgURL+"/"+thumbpath2,
+                      categoryId: fileObj.fields.categoryId[0]
+                    }, function (err, obj) {
+                      if (err !== null) {
+                        cb(err);
+                      } else {
+                        console.log("obj is  -->>>"+JSON.stringify(obj));
+                        var response ={
+                          "id":obj.id,
+                          "categoryId": obj.categoryId,
+                          "ImgURL": obj.ImgURL,
+                          "ThumbURL":obj.ThumbURL
+                        };
+                        cb(null, response);
+                      }
+                    });
 
                   }).catch(function(e) {
                     console.log('Error', e.toString());

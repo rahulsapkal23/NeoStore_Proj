@@ -75,7 +75,7 @@
     "images": {
       "type": "hasOne",
       "model": "image",
-      "foreignKey": ""
+      "foreignKey": "userId"
     },
     "addresses": {
       "type": "hasMany",
@@ -91,6 +91,11 @@
       "type": "hasMany",
       "model": "rating",
       "foreignKey": "user_id"
+    },
+    "order": {
+      "type": "hasMany",
+      "model": "order",
+      "foreignKey": "userId"
     }
   },
   "acls": [

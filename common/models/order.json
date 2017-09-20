@@ -30,6 +30,11 @@
       "type": "hasMany",
       "model": "user_account",
       "foreignKey": ""
+    },
+    "orderitems": {
+      "type": "hasMany",
+      "model": "orderitems",
+      "foreignKey": "orderId"
     }
   },
   "acls": [],

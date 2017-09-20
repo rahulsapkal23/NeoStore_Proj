@@ -4,6 +4,7 @@ var Product = loopback.getModel("product");
 var Promise = require('bluebird');
 var waterfall =require('async/waterfall');
 var each =require('async/each');
+var eachSeries=require('async/eachSeries')
 
 module.exports = function (Shoppingcart) {
 
@@ -19,29 +20,6 @@ module.exports = function (Shoppingcart) {
 
     console.log("-->" + JSON.stringify((context.args.data)));
     var getProdId = context.args.data.productid;
-
-    // Shoppingcart.app.models.Product.find({where: {id: getProdId}}, function (err, cart) {
-    //   // console.log("get data ---> "+ JSON.stringify(cart));
-    //   if (err) {
-    //     console.log("error");
-    //     cb({"message": "Something went wrong"});
-    //     return;
-    //   }
-    //   else {
-    //     if (context.args.data) {
-    //       console.log("in side update of date-->" + JSON.stringify((context.args.data)));
-    //       //context.args.data.product_description = cart[0].product_description;
-    //       //context.args.data.product_cost = cart[0].product_cost;
-    //      //next();
-    //       // ctx.data.modified_date = new Date();
-    //     }
-    //   }
-    // })
-
-    //context.args.data.product_description=pro_desc;
-
-    //console.log("-insert->" + JSON.stringify((context.args.data.email)));
-    //checkemail(context.args.data.email);
     next();
   });
 
@@ -76,10 +54,12 @@ module.exports = function (Shoppingcart) {
       var cartData;
       console.log("userid->",userid)
       var imgmodel= Shoppingcart.app.models.image;
-      //Shoppingcart.find({where:{userId:userid}},function (err, cart) {
-      Shoppingcart.find({'where':{userId:userid}},function (err, cart) {
+      Shoppingcart.find({'where':{userId:userid},order:'product_name ASC'},function (err, cart) {
+      //Shoppingcart.find({'where':{userId:userid}},function (err, cart) {
       cartData = cart
-        console.log("two-->",cartData.length)
+        console.log("len-->",cartData.length)
+        //console.log("one-->",cartData[0].product_name);
+        //console.log("two-->",cartData[1].product_name);
         callback(null,cartData);
       })
 
@@ -91,10 +71,11 @@ module.exports = function (Shoppingcart) {
       var  finalarry=[];
       var imgmodel= Shoppingcart.app.models.image;
 
-      each(cartData, function(cartData, callback) {
-        imgmodel.find({where:{productId:cartData.productid}},function (err,res) {
-              console.log('pro img->',res[0]);
+      eachSeries(cartData, function(cartData, callback) {
+        imgmodel.find({where:{productId:cartData.productid},order:'productId ASC'},function (err,res) {
+              //console.log('pro img->',res[0]);
              var obj={
+               id:cartData.id,
                productId: res[0].productId,
                product_producer:cartData.product_producer,
                product_name:cartData.product_name,
@@ -111,19 +92,38 @@ module.exports = function (Shoppingcart) {
               if( err ) {
                    console.log('some thing went wrong');
         } else {
-          console.log('All files have been processed successfully',finalarry);
+          //console.log(finalarry[0].product_name,'All files have been processed successfully',finalarry[1].product_name);
           callback(null,finalarry);
         }
       });
     }
     function myLastFunction(arg1, callback) {
-           console.log("done1--->",arg1)
+          // console.log("done1--->",arg1)
            callback(null, arg1);
 
     }
   }
 
   /**************************** add to cart **********************************************/
+  /**************** Format of posting Data
+   {
+    "userid":"5975ba6df6d9e115d3871e6a",
+     "products":[{
+                 "productId":"59770dbcee32740640a49f59",
+                "qty":"1"
+                },
+                {
+                "productId":"59771cc0ee32740640a49f5b",
+                "qty":"1"
+                },
+                {
+                "productId":"59771d97ee32740640a49f5d",
+                "qty":"1"
+                 }
+                ]
+
+      }
+   */
 
   Shoppingcart.remoteMethod('addToCart', {
     description: "Adding product to cart",

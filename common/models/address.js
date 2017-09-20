@@ -1,4 +1,5 @@
 'use strict';
+const chalk = require('chalk');
 
 module.exports = function(Address) {
 
@@ -31,7 +32,8 @@ module.exports = function(Address) {
 
     console.log("-->" + userAccountId);
     Address.app.models.user_account.find({where: {"id": userAccountId}} ,function (err, result) {
-      console.log("Total product-->" + result.length)
+      console.log(chalk.yellow('Total Address', result.length));
+      //console.log("Total Address-->" + result.length)
       if (!err) {
         if(result.length){
 
@@ -39,13 +41,13 @@ module.exports = function(Address) {
 
             if (err) {
               //custom logger 
-              console.error(err);
+              console.error(chalk.red(err));
               cb({"message": "some thing went Wrong"});
               return;
             }
             else {
 
-              console.log(JSON.stringify(address)+"success=" + address.length);
+              console.log(chalk.green(JSON.stringify(address)+"success=" + address.length));
               if (address.length) {
                 cb(null,address);
                 console.log("success=");

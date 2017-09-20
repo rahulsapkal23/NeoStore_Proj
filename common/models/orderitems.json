@@ -28,7 +28,7 @@
   "validations": [],
   "relations": {
     "_id": {
-      "type": "belongsTo",
+      "type": "hasMany",
       "model": "order",
       "foreignKey": ""
     }

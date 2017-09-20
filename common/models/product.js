@@ -28,18 +28,10 @@ module.exports = function (Product) {
             }
           }
           else {
-
             cb(err);
-
           }
-
-
         });
     }
-
-
-
-
   });
 
 
@@ -55,6 +47,18 @@ module.exports = function (Product) {
   //   console.log("-->"+JSON.stringify((context.args.data)));
   //   next();
   // });
+
+  Product.remoteMethod('getCartDetails', {
+    description: "get All CartDetails for a particular user",
+    accepts: [{arg: 'userid', type: 'string', require: true}],
+    returns: [{type: 'object', root: true}],
+    http: {path: '/getCart', verb: 'get'},
+  });
+
+  /******************************* get cart details of particular user *****************************************/
+  Product.getCartDetails = function (cb) {
+
+  }
 
 };
 
