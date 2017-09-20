@@ -2,14 +2,14 @@
 var loopback = require('loopback');
 var Product = loopback.getModel("product");
 var Category = loopback.getModel("category");
-
 var UserAcc = loopback.getModel("user_account");
-
+var urls = require("./global");
 // var Product =require("product");
 module.exports = function(Image) {
 
   var thumb = require('node-thumbnail').thumb;
-  var imgURL = "http://10.0.100.213:8080";
+  var imgURL = urls.imgURL;
+  console.log("-image-->"+imgURL);
   var containerName = 'image';
   var thumbpath;
   var imgType;

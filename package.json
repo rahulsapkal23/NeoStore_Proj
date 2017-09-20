@@ -7,7 +7,7 @@
   },
   "scripts": {
     "lint": "eslint .",
-    "start": "concurrently \"nodemon server/server.js\" \"http-server\"",
+    "start": "concurrently \"nodemon server/server.js\" \"http-server -a 180.149.245.182 -p 8087\"",
     "posttest": "npm run lint && nsp check"
   },
   "dependencies": {
@@ -23,6 +23,7 @@
     "loopback-component-storage": "^3.2.0",
     "loopback-connector-mongodb": "^3.1.0",
     "node-thumbnail": "^0.11.0",
+    "path": "^0.12.7",
     "serve-favicon": "^2.0.1",
     "stripe": "^4.24.1",
     "strong-error-handler": "^2.0.0"

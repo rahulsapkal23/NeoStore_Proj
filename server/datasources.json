@@ -4,13 +4,13 @@
     "connector": "memory"
   },
   "connect_strong_Database": {
-    "host": "127.0.0.1",
-    "port": "27017",
-    "url": "mongodb://127.0.0.1:27017/NeoStore_Proj_DB",
-    "database": "NeoStore_Proj_DB",
-    "password": "",
-    "name": "connect_strong_Database",
-    "user": "",
+    "host": "ds141454.mlab.com",
+    "port": "41454",
+    "url": "mongodb://root:root123@ds141454.mlab.com:41454/neostore",
+    "database": "neostore",
+    "password": "root123",
+    "name": "root",
+    "user": "javascriptteam",
     "connector": "mongodb"
   },
   "neoemail": {
@@ -36,6 +36,6 @@
     "name": "myfile",
     "connector": "loopback-component-storage",
     "provider": "filesystem",
-    "root": "/Users/webwerks/Documents/Strong_neoStore/NeoStore_Proj/storage"
+    "root": "./storage"
   }
 }
