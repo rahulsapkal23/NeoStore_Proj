@@ -70,6 +70,7 @@ module.exports = function(Order) {
       mySecondFunction,
       myThirdFunction,
       myLastFunction,
+      DropMailToClient,
     ], function (err, result) {
       // result now equals 'done'
       if(err){
@@ -104,38 +105,54 @@ module.exports = function(Order) {
     }
 
     function myFirstFunction(userdeatils,callback) {
-      //calculating toal cost of product and giving it to second function
-      console.log("myFirstFunction->"+data.products.length);
-      var toatalcost=0;
-      if(data.products.length>0) {
-        each(data.products, function (product, callback) {
-          console.log("product->", product.productId);
+      //calculating toal cost of product and giving it to second function with product array
+      //console.log("myFirstFunction->"+data.products.length);
 
-          Order.app.models.product.find({where:{id:product.productId}},function (err,res) {
-            console.log("cost-->",res[0].product_cost);
-            console.log("qty-->",parseInt(product.productqty));
-            product.product_cost=res[0].product_cost
-            toatalcost=toatalcost+(parseInt(res[0].product_cost) * parseInt(product.productqty));
-            console.log("toatalcost-->",toatalcost)
-            callback(null,toatalcost);
-          });
+      Order.app.models.shoppingcart.find({where:{userId:data.userId}},function (err,res) {
+        if(err){
+          console.log("error while finding instat in shoppingcart",err)
+        }
+        else {
+          if(res.length>0) {
+            console.log("shoppingcart ",res);
+            var  productArray=res;
+            var toatalcost=0;
+            if(productArray.length>0) {
+              each(productArray, function (product, callback) {
+                console.log("product->", product.productid);
 
-        }, function (err, res) {
-          if (err) {
-            console.log('some thing went wrong');
-            callback('some thing went wrong');
-          } else {
-            console.log('total cost to be inserted',toatalcost);
-            callback(null, data,userdeatils, toatalcost);
+                Order.app.models.product.find({where:{id:product.productid}},function (err,res) {
+                  console.log("cost-->",res[0].product_cost);
+                  console.log("qty-->",parseInt(product.productqty));
+                  product.product_cost=res[0].product_cost
+                  toatalcost=toatalcost+(parseInt(res[0].product_cost) * parseInt(product.productqty));
+                  console.log("toatalcost-->",toatalcost)
+                  callback(null,toatalcost,productArray);
+                });
+
+              }, function (err, res) {
+                if (err) {
+                  console.log('some thing went wrong');
+                  callback('some thing went wrong');
+                } else {
+                  console.log('total cost to be inserted',toatalcost);
+                  callback(null, data,userdeatils, toatalcost,productArray);
+                }
+              });
+            }
+
           }
-        });
-      }
-
+          else {
+            console.log("no product found ");
+            callback("no product found in shopping cart");
+          }
+        }
+      });
     }
 
-    function verifyCard(data,userdeatils,toatalcost,callback) {
+    function verifyCard(data,userdeatils,toatalcost,productArray,callback) {
 
-      console.log("in veryfy",toatalcost);
+      // console.log(productArray,"<----in veryfy--->",toatalcost);
       stripe.customers.create({
         email: userdeatils.email
       }).then(function(customer){
@@ -160,7 +177,7 @@ module.exports = function(Order) {
         });
       }).then(function(charge) {
         console.log("charges sucesss-->",charge)
-        callback(null, data, toatalcost);
+        callback(null,userdeatils, data, toatalcost,productArray);
         // New charge created on a new customer
       }).catch(function(err) {
         console.log("err-->",err)
@@ -168,13 +185,13 @@ module.exports = function(Order) {
         // Deal with an error
       });
     }
-    function getFullAddress(data, toatalcost,callback) {
+    function getFullAddress(userdeatils,data, toatalcost,productArray,callback) {
       //------------------ get full address of user -----------------------
       Order.app.models.address.find({where:{id:data.addressId}},function (err,res) {
         if(res.length>0){
           //console.log("-->",res);
           var address=res[0];
-          callback(null,address,data,toatalcost)
+          callback(null,userdeatils,address,data,toatalcost,productArray)
         }
         else {
           //console.log("no such orders")
@@ -183,52 +200,52 @@ module.exports = function(Order) {
       });
     }
 
-    function mySecondFunction(address,data, toatalcost, callback) {
+    function mySecondFunction(userdeatils,address,data, toatalcost,productArray, callback) {
       //----------- inserting the entry in order table ----------------------
       //console.log(data,"<---data2  product_name->",toatalcost);
-     var createdate = new Date().toDateString()
-        if(data.userId && toatalcost) {
-          Order.create({
-            createon: createdate,
-            userId: data.userId,
-            orderstatus: "transit",
-            ordertotal: toatalcost,
-            address:address
-          }, function (err, res) {
-            console.log("success insert in order->", res);
-            if(err){
-              console.log("error while inserting", err)
-            }
-            else {
-              callback(null, res,data);
-            }
-          });
-        }
+      var createdate = new Date().toDateString()
+      if(data.userId && toatalcost) {
+        Order.create({
+          createon: createdate,
+          userId: data.userId,
+          orderstatus: "transit",
+          ordertotal: toatalcost,
+          address:address
+        }, function (err, res) {
+          console.log("success insert in order->", res);
+          if(err){
+            console.log("error while inserting", err)
+          }
+          else {
+            callback(null,userdeatils, res,data,productArray);
+          }
+        });
+      }
     }
-    function myThirdFunction(resSecond,data, callback) {
+    function myThirdFunction(userdeatils,resSecond,data,productArray, callback) {
       // inserting product in orderitem table
       //console.log(data,"<--data3->",resSecond);
-
-      if(data.products.length>0) {
-        each(data.products, function (product, callback) {
-
+      //console.log("<--data3->",productArray);
+      if(productArray.length>0) {
+        each(productArray, function (product, callback) {
           Order.app.models.orderitems.create({
-              productId: product.productId,
+              productId: product.productid,
               productprice: product.product_cost,
               productqty: product.productqty,
               orderId: resSecond.id
             }
-          ,function (err,res) {
-            console.log("3-->",res.id);
-            if(err){
-              console.log("error while inserting in order items",err)
-              callback("error while inserting in order items");
-            }
-            else {
-              console.log("order item success");
-              callback(null, "success");
-            }
-          });
+
+            ,function (err,res) {
+              console.log("3-->",res.id);
+              if(err){
+                console.log("error while inserting in order items",err)
+                callback("error while inserting in order items");
+              }
+              else {
+                console.log("order item success");
+                callback(null, "success");
+              }
+            });
 
 
         }, function (err, res) {
@@ -237,13 +254,13 @@ module.exports = function(Order) {
           } else {
             console.log('order item inserted',res);
             //callback(null, data, toatalcost);
-            callback(null, data,resSecond);
+            callback(null,userdeatils, data,resSecond);
           }
         });
       }
     }
 
-    function myLastFunction(data,resSecond, callback) {
+    function myLastFunction(userdeatils,data,resSecond, callback) {
       // remove product from cart table
       console.log("data4->",data.userId);
       Order.app.models.shoppingcart.find({where:{userId:data.userId}},function (err,res) {
@@ -253,7 +270,7 @@ module.exports = function(Order) {
         else {
           if(res.length>0) {
             each(res, function (product, callback) {
-             console.log("id to delete->",product.id)
+              console.log("id to delete->",product.id)
               Order.app.models.shoppingcart.destroyById(product.id,function (err,res) {
                 console.log("deleted-->",res);
                 callback(null, 'loop delete success');
@@ -268,7 +285,7 @@ module.exports = function(Order) {
                 var obj={};
                 obj.orderId=resSecond.id;
                 obj.message="order placed successfully";
-                callback(null, obj);
+                callback(null,userdeatils, obj);
               }
             });
           }
@@ -279,14 +296,35 @@ module.exports = function(Order) {
         }
       });
     }
+    function DropMailToClient(userdeatils,obj,callback) {
+      // mail to client regarding generated order
+      //console.log("userdeatils->",userdeatils)
+      Order.app.models.Email.send({
+        to:userdeatils.email, //"suhel.khan@neosofttech.com",//"sandip.ghadge@wwindia.com",//info.email,
+        from:"aniket.pracheta@neosofttech.com",
+        subject: "Order Placed Successfully",
+        //html: "<a href='" + setURL + "'>Click Me to Change Password</a>"
+        html:"Hello User,<br>Your order is placed successfully kindly login with your credentials on site for more information.Your order no is -"+obj.orderId//html_body
+      }, function (err, mail) {
+
+        if (!err) {
+          console.log("mail send");
+          //cb(null,"Mail sent successfully")
+          callback(null, obj);
+        } else {
+          console.log(err);
+          callback(null, obj);
+        }
+      });
+    }
   }
 
 
 
 
 
-/******** get Particualr Order Details from order no *****************/
-/******** posting the order no to get full order details in path ************/
+  /******** get Particualr Order Details from order no *****************/
+  /******** posting the order no to get full order details in path ************/
 
   Order.remoteMethod('getParticularOrderDetails', {
     description: "get Particular Order Details from order no",
@@ -321,7 +359,7 @@ module.exports = function(Order) {
         if(res.length==1){
           //console.log("cost-->",res);
           var FirstResponse=res[0];
-            callback(null,FirstResponse)
+          callback(null,FirstResponse)
         }
         else {
           console.log("no such orders")
@@ -335,7 +373,7 @@ module.exports = function(Order) {
 
       console.log(" mySecondFunction-->",FirstResponse.id);
       Order.app.models.orderitems.find({where:{orderId:FirstResponse.id}},function (err,res) {
-               if(res.length>0){
+        if(res.length>0){
           var SecondProductArray=res;
           callback(null,FirstResponse,SecondProductArray)
         }
@@ -349,7 +387,7 @@ module.exports = function(Order) {
     }
     function myLastFunction(FirstResponse,SecondProductArray, callback) {
       //------ firing query at product table to get all details of product and passing its array to next --------------------------
-     // console.log(FirstResponse,"<---three--->",SecondProductArray.length);
+      // console.log(FirstResponse,"<---three--->",SecondProductArray.length);
       var productArray=[];
 
       each(SecondProductArray, function(cartData, callbackeach) {
@@ -360,30 +398,30 @@ module.exports = function(Order) {
             }
           }
 
-        ,function (err,res) {
-          console.log('pro ->',res);
-          var imgpro=JSON.stringify(res);
-          var img=JSON.parse(imgpro);
-          console.log('pro img->',img.images[0]);
-          var obj={
-            productId: res.id,
-            product_producer:res.product_producer,
-            product_name:res.product_name,
-            product_avg_rating: res.product_avg_rating,
-            productqty: cartData.productqty,
-            product_cost:cartData.productprice,
-            instock: true,
-            images:img.images[0]
-          }
-           productArray.push(obj)
-          callbackeach(null,productArray);
-        })
+          ,function (err,res) {
+            console.log('pro ->',res);
+            var imgpro=JSON.stringify(res);
+            var img=JSON.parse(imgpro);
+            console.log('pro img->',img.images[0]);
+            var obj={
+              productId: res.id,
+              product_producer:res.product_producer,
+              product_name:res.product_name,
+              product_avg_rating: res.product_avg_rating,
+              productqty: cartData.productqty,
+              product_cost:cartData.productprice,
+              instock: true,
+              images:img.images[0]
+            }
+            productArray.push(obj)
+            callbackeach(null,productArray);
+          })
 
       }, function(err,res) {
         if( err ) {
           console.log('some thing went wrong');
         } else {
-         // console.log('All files have been processed successfully',productArray);
+          // console.log('All files have been processed successfully',productArray);
           FirstResponse.products=productArray;
           callback(null,FirstResponse,productArray);
         }
@@ -393,7 +431,7 @@ module.exports = function(Order) {
 
     function finalResponseFunction(FirstResponse,productArray,callback) {
       //--------------- prepare final response-------------------------------
-     // console.log(FirstResponse,"final res-->",productArray)
+      // console.log(FirstResponse,"final res-->",productArray)
       var finalResponse={
         orderId:FirstResponse.id,
         userId:FirstResponse.userId,
@@ -432,7 +470,7 @@ module.exports = function(Order) {
         if (res.length > 0)
         {
           callbackeach(null, res);
-         //var respo=  Order.getParticularOrderDetails("59a81a077bf2080cf4d8b186");
+          //var respo=  Order.getParticularOrderDetails("59a81a077bf2080cf4d8b186");
           //console.log("i want-->",respo);
         }
         else {
@@ -519,38 +557,38 @@ module.exports = function(Order) {
     function myLastFunction(allorderArray, callback) {
       //---------------- get product in a details from product table -------------
       //console.log("-final array-->",allorderArray)
-        var finalResponse=[];
+      var finalResponse=[];
       eachSeries(allorderArray, function (order, callbackbigeach) {
         //console.log("-order no-->",order.order.id)
-       var  productArray=[];
+        var  productArray=[];
         eachSeries(order.products, function(cartData, callbackeachsmall) {
           //console.log("-- befor query-->>",cartData);
 
-           Order.app.models.product.findById(cartData.productId,
-             {
-               include: {
-               relation: 'images',
+          Order.app.models.product.findById(cartData.productId,
+            {
+              include: {
+                relation: 'images',
               }
-             }
-          ,function (err,res) {
-            //console.log('in query products ->',res);
-             var imgpro=JSON.stringify(res);
-             var img=JSON.parse(imgpro);
-            // console.log('pro img->',img);
-             var obj={
-               productId: res.id,
-               product_producer:res.product_producer,
-               product_name:res.product_name,
-               product_avg_rating: res.product_avg_rating,
-               productqty: cartData.productqty,
-               product_cost:cartData.productprice,
-               instock: true,
-               images:img.images[0]
-             }
-             productArray.push(obj)
-             obj={}
-           callbackeachsmall(null,productArray);
-          })
+            }
+            ,function (err,res) {
+              //console.log('in query products ->',res);
+              var imgpro=JSON.stringify(res);
+              var img=JSON.parse(imgpro);
+              // console.log('pro img->',img);
+              var obj={
+                productId: res.id,
+                product_producer:res.product_producer,
+                product_name:res.product_name,
+                product_avg_rating: res.product_avg_rating,
+                productqty: cartData.productqty,
+                product_cost:cartData.productprice,
+                instock: true,
+                images:img.images[0]
+              }
+              productArray.push(obj)
+              obj={}
+              callbackeachsmall(null,productArray);
+            })
         }, function(err,res) {
           if( err ) {
             console.log('some thing went wrong');

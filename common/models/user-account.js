@@ -55,7 +55,7 @@ module.exports = function (Useraccount) {
   Useraccount.remoteMethod('AdminDashboard', {
     description: "On admin login to get details for dash board",
     returns: [{type: 'object', root: true}],
-     http: {path: '/adminDashboard', verb: 'get'}
+    http: {path: '/adminDashboard', verb: 'get'}
   });
   Useraccount.remoteMethod('AdminLogin', {
     description: "API only for Admin login",
@@ -229,7 +229,7 @@ module.exports = function (Useraccount) {
     //console.log("-->" + user_id + "" + last_name + "" + role + "" + phone_no + "" + birth_date);
 
     Useraccount.find({where: {"id": user_id}}, function (err, user) {
-     // console.log("data-->" + JSON.stringify(user) + "-------" + user.length);
+      // console.log("data-->" + JSON.stringify(user) + "-------" + user.length);
       if (user.length) {
 
       }
@@ -288,7 +288,7 @@ module.exports = function (Useraccount) {
     Useraccount.find(function (err, result) {
       console.log("Total Users-->" + result.length)
       if (!err) {
-       // output.Total_User = result.length;
+        // output.Total_User = result.length;
         var output3={
           "title":"Total User",
           "value": result.length
@@ -350,9 +350,9 @@ module.exports = function (Useraccount) {
 
         console.log(JSON.stringify(user)+"success=" + user.length);  //+ user[0].id
         if (user.length) {
-            // Useraccount.generateVerificationToken(data.email,function (err, accessToken) {
-            //   console.log(accessToken);
-            //  } );
+          // Useraccount.generateVerificationToken(data.email,function (err, accessToken) {
+          //   console.log(accessToken);
+          //  } );
 
           Useraccount.accessToken.create({userId:user[0].id}, function (err, accessToken) {
             if (accessToken) {
@@ -408,7 +408,7 @@ module.exports = function (Useraccount) {
 
     //for facebook
     Useraccount.find({where: {and: [{facebook_id:data.email},{provider:'facebook'}]}}, function (err, user) {
-          console.log("in face book-->", data.email )
+      console.log("in face book-->", data.email )
       if (err) {
         //custom logger 
         console.error(err);
@@ -419,7 +419,7 @@ module.exports = function (Useraccount) {
 
         console.log(JSON.stringify(user)+"success=" + user.length);  //+ user[0].id
         if (user.length) {
-              console.log("user id-->",user[0].id)
+          console.log("user id-->",user[0].id)
           Useraccount.accessToken.create({userId:user[0].id}, function (err, accessToken) {
             if (accessToken) {
               console.log("acess after register-->",accessToken);
@@ -474,13 +474,16 @@ module.exports = function (Useraccount) {
   }
 
 
-/******************** contact us API ************************/
+  /******************** contact us API ************************/
   /**    data fro hitting tis api
    {
-   "user_emailId":"a@b.com",
-   "subject":"this is to be subject",
-   "body":"this is our body of email"
+   name: 'Sohail Khan',
+   email: 'skykazi15@gmail.com',
+   mobile: '8767375751',
+   subject: 'Subject',
+   message: 'Message'
    }
+
    */
   Useraccount.contactUs=function (data,cb) {
     console.log("data->",data)
@@ -489,10 +492,10 @@ module.exports = function (Useraccount) {
     // sending mail to admin
     Useraccount.app.models.Email.send({
       to: "aniket.pracheta@neosofttech.com",//"sandip.ghadge@wwindia.com",//info.email,
-      from: data.user_emailId,
+      from: data.email,
       subject: data.subject,
       //html: "<a href='" + setURL + "'>Click Me to Change Password</a>"
-      html:data.body //html_body
+      html:data.name+", <br><br>"+data.message //html_body
     }, function (err, mail) {
       console.log('welcome email sent!');
       if (!err) {
@@ -506,11 +509,11 @@ module.exports = function (Useraccount) {
 
     // send mail to user
     Useraccount.app.models.Email.send({
-      to: data.user_emailId,//"sandip.ghadge@wwindia.com",//info.email,
+      to: data.email,//"sandip.ghadge@wwindia.com",//info.email,
       from: 'aniket.pracheta@neosofttech.com',
       subject: 'Thanks for your mail',
       //html: "<a href='" + setURL + "'>Click Me to Change Password</a>"
-      html: 'We will get back to you soon'//html_body
+      html: 'Hi User,<br><br>We will get back to you soon'//html_body
     }, function (err, mail) {
       console.log('welcome email sent!');
       if (!err) {
@@ -518,44 +521,44 @@ module.exports = function (Useraccount) {
         cb(null,"Mail sent successfully")
       } else {
         cb(err)
-              }
+      }
     });
 
   }
 
 
 
-/*************************** mail from admin ****************/
+  /*************************** mail from admin ****************/
   /**    data fro hitting tis api
-    {
-     "user_emailId":"a@b.com",
-     "to":"a@b.com",
-     "subject":"this is to be subject",
-     "body":"this is our body of email"
-     }
-  */
-  Useraccount.mailFromAdmin=function (data,cb) {
-  console.log("data->",data)
-
-  Useraccount.app.models.Email.send({
-    to:data.user_emailId, //"suhel.khan@neosofttech.com",//"sandip.ghadge@wwindia.com",//info.email,
-    from:data.to,
-    subject: data.subject,
-    //html: "<a href='" + setURL + "'>Click Me to Change Password</a>"
-    html:data.body//html_body
-  }, function (err, mail) {
-    console.log('welcome email sent!');
-    if (!err) {
-      console.log("mail send");
-      cb(null,"Mail sent successfully")
-      //return true;
-    } else {
-      cb("error->",err);
-      //return false;
+   {
+    "user_emailId":"a@b.com",
+    "to":"a@b.com",
+    "subject":"this is to be subject",
+    "body":"this is our body of email"
     }
-  });
+   */
+  Useraccount.mailFromAdmin=function (data,cb) {
+    console.log("data->",data)
 
-}
+    Useraccount.app.models.Email.send({
+      to:data.user_emailId, //"suhel.khan@neosofttech.com",//"sandip.ghadge@wwindia.com",//info.email,
+      from:data.to,
+      subject: data.subject,
+      //html: "<a href='" + setURL + "'>Click Me to Change Password</a>"
+      html:data.body//html_body
+    }, function (err, mail) {
+      console.log('welcome email sent!');
+      if (!err) {
+        console.log("mail send");
+        cb(null,"Mail sent successfully")
+        //return true;
+      } else {
+        cb("error->",err);
+        //return false;
+      }
+    });
+
+  }
 
 
 };

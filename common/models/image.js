@@ -2,17 +2,20 @@
 var loopback = require('loopback');
 var Product = loopback.getModel("product");
 var Category = loopback.getModel("category");
+
 var UserAcc = loopback.getModel("user_account");
 var urls = require("./global");
+
 // var Product =require("product");
 module.exports = function(Image) {
 
   var thumb = require('node-thumbnail').thumb;
   var imgURL = urls.imgURL;
-  console.log("-image-->"+imgURL);
   var containerName = 'image';
   var thumbpath;
   var imgType;
+  var img_source_path = 'client/storage/image/';
+  var img_destination_path = 'client/storage/thumbnail'
 
   //Custom API for Upload image for Product, Category, User
   Image.profileData = function (ctx,options, cb) {
@@ -30,12 +33,7 @@ module.exports = function(Image) {
         return;
       }
       else if (fileObj.fields.userId == undefined && fileObj.fields.categoryId == undefined) {
-        // if (fileObj.fields.productId == undefined)
-        // {
-        //   cb({"message": "product id required"});
-        //   return;
-        // }
-        // else
+
         if (fileObj.fields.productId != "")
         {
           imgType = "Product";
@@ -43,38 +41,36 @@ module.exports = function(Image) {
             {where: {id : fileObj.fields.productId[0]} },
             function(err, product){
               if(!err){
-                // console.log("sucess product"+JSON.stringify(product));
-                // console.log("sucess product.length"+JSON.stringify(product.length));
                 if(product.length == 0){
-                  // console.log("no such user exist");
                   cb({"statusCode" : 401,"message": "product id is Invalid"});
                   return;
                 }
                 else {
-                  // console.log('success fileObj123', JSON.stringify(fileObj));
                   var finalresponse = [];
                   let fileLength = fileObj.files.file.length;
-                  // console.log('fileLength', fileLength)
                   let ln = 0;
                   fileObj.files.file.forEach((fileInfo) => {
                     thumb({
                       prefix: '_',
                       suffix: '_250thumb',
-                      source: 'storage/image/' + fileInfo.name, //please give server related path
-                    destination: 'storage/thumbnail',
+                      source: img_source_path + fileInfo.name, //please give server related path
+                    destination: img_destination_path,
                     overwrite: true,
                     width: 250
                 }).then((done) => {
-                    var thumbpath1 =done[0].dstPath;
+                    var thumbpath1 =done[0].dstPath.replace("client/", "");
+
                   thumb({
                     prefix: '_',
                     suffix: '_100thumb',
-                    source: 'storage/image/' + fileInfo.name, //please give server related path
-                    destination: 'storage/thumbnail',
+                    source: img_source_path + fileInfo.name, //please give server related path
+                    destination: img_destination_path,
                     overwrite: true,
                     width: 100
                   }).then( (done) => {
-                    var thumbpath2 =done[0].dstPath;
+                    var thumbpath2 =done[0].dstPath.replace("client/", "");
+
+
 
                   Image.create({
                     name: fileInfo.name,
@@ -141,13 +137,16 @@ module.exports = function(Image) {
                   thumb({
                     prefix: '_',
                     suffix: '_thumb',
-                    source: 'storage/image/'+fileInfo.name, //please give server related path
-                    destination: 'storage/thumbnail',
+                    source: img_source_path+fileInfo.name, //please give server related path
+                    destination: img_destination_path,
                     overwrite: true,
                     width: 200
                   }).then(function(files) {
                     console.log('Success');
-                    var thumbpath2 =files[0].dstPath;
+                    // var thumbpath2 =files[0].dstPath;
+                    var thumbpath2 =files[0].dstPath.replace("client/", "");
+
+                    console.log('thumbpath2 -- >'+thumbpath2);
 
                     Image.create({
                       name: fileInfo.name,
@@ -171,11 +170,6 @@ module.exports = function(Image) {
                         cb(null, response);
                       }
                     });
-
-
-
-
-
 
 
 
@@ -218,13 +212,14 @@ module.exports = function(Image) {
                   thumb({
                     prefix: '_',
                     suffix: '_thumb',
-                    source: 'storage/image/'+fileInfo.name, //please give server related path
-                    destination: 'storage/thumbnail',
+                    source: img_source_path+fileInfo.name, //please give server related path
+                    destination: img_destination_path,
                     overwrite: true,
                     width: 200
                   }).then(function(files) {
                     console.log('Success');
-                    var thumbpath2 =files[0].dstPath;
+
+                    var thumbpath2 =files[0].dstPath.replace("client/", "");
 
                     Image.create({
                       name: fileInfo.name,
